@@ -1,0 +1,22 @@
+//position to absolute
+
+@mixin absolute_left_top($left, $top){
+  position: absolute;
+  left: $left;
+  top: $top;
+}
+@mixin absolute_right_top($right, $top){
+  position: absolute;
+  right: $right;
+  top: $top;
+}
+@mixin absolute_left_bottom($left, $bottom){
+  position: absolute;
+  left: $left;
+  bottom: $bottom;
+}
+@mixin absolute_right_bottom($right, $bottom){
+  position:absolute;
+  right: $right;
+  bottom: $bottom;
+}

@@ -1,0 +1,28 @@
+
+.sel-modal{
+  position: fixed;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  background: rgba(0, 0, 0, 0.6);
+  overflow: auto;
+  z-index: $third-index;
+}
+.sel-modal-box{
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  text-align: center;
+  display: flex;
+  box-sizing: border-box;
+}
+
+.sel-modal-content{
+  background: #fff;
+  border-radius: 4px;
+  margin: auto;
+  align-items: center;
+  box-sizing: border-box;
+  text-align: left;
+}

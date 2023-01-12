@@ -1,0 +1,25 @@
+
+@mixin overflow-ellipsis() {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@mixin vertical-center($height, $line-height) {
+  height: $height;
+  line-height: $line-height;
+}
+
+@mixin box-whole() {
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  font-size: 0;
+}
+
+@mixin arrow-variant($border-size, $top-color, $bottom-color, $left-color, $right-color) {
+  border-top: $border-size solid $top-color;
+  border-bottom: $border-size solid $bottom-color;
+  border-left: $border-size solid $left-color;
+  border-right: $border-size solid $right-color;
+}

@@ -1,0 +1,10 @@
+//variant to form box
+
+@mixin form-variant($bg-color, $font-size, $height, $padding-vertical, $padding-horizontal) {
+  border-radius: 8px;
+  height: $height;
+  padding: $padding-vertical $padding-horizontal;
+  box-sizing: border-box;
+  font-size: $font-size;
+  background: $bg-color;
+}

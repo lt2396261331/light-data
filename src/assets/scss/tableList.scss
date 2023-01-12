@@ -1,0 +1,33 @@
+
+@import "./variable";
+@import "./mixins";
+@import "./search";
+
+.view-table-container{
+  width: 100%;
+  background: $bg-white;
+  padding: 20px;
+  box-sizing: border-box;
+  border: 1px solid $border-transparent;
+  margin-bottom: 12px;
+  .el-input, .el-select, /deep/ .el-date-editor--daterange, /deep/ .el-range-editor{
+    width: 100%;
+  }
+  .el-pagination{
+    margin-top: 20px;
+    text-align: right;
+  }
+
+  .el-table .iconfont {
+    color: $font-basic;
+    font-size: 20px;
+    cursor: pointer;
+    margin-right: 8px;
+    &:last-child{
+      margin: 0;
+    }
+  }
+  .deal-red{
+    color: $font-red;
+  }
+}

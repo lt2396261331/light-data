@@ -1,0 +1,14 @@
+// Core variables and mixins
+@import "./variable";
+@import "./mixins";
+
+// Reset and dependencies
+@import "./normalize";
+//@import "./basic";
+
+//application dependence
+//@import "./border";
+//@import "./form";
+//@import "./modal";
+//@import "./table";
+@import "./animation";

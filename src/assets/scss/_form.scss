@@ -1,0 +1,47 @@
+
+
+input{
+  outline: none;
+  border: 1px solid #C9D0D8;
+  border-radius: 4px;
+  height: 30px;
+  box-sizing: border-box;
+  font-size: 12px;
+  color: $font-dark;
+  font-family: Arial;
+}
+
+textarea{
+  line-height: 20px;
+  border: 1px solid #C9D0D8;
+  border-radius: 4px;
+  padding: 7px 10px;
+  box-sizing: border-box;
+  outline: none;
+  vertical-align: top;
+  resize: none;
+  color: $font-dark;
+  font-family: Arial;
+}
+
+.textarea-false{
+  font-size: 12px;
+  color: #333333;
+  border: 1px solid rgba(216,216,216,0.4);
+}
+
+.input-false{
+  display: inline-block;
+  width: 100%;
+  font-size: 12px;
+  color: #333333;
+  height: 30px;
+  line-height: 30px;
+  text-indent: 10px;
+  border: 1px solid rgba(216,216,216,0.4);
+  border-radius: 4px;
+  overflow: hidden;
+  word-break: break-all;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

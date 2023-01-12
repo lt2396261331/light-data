@@ -1,0 +1,25 @@
+
+@keyframes zero-to-auto {
+  from {transform: scale(0.6)}
+  to {transform: scale(1.0)}
+}
+
+@keyframes rotate_90 {
+  from{transform: rotate(-90deg)}
+  to{transform: rotate(0deg)}
+}
+
+@keyframes rotate_0 {
+  from{transform: rotate(0deg)}
+  to{transform: rotate(-90deg)}
+}
+
+@keyframes circle {
+  from {transform: rotate(0deg);}
+  to {transform: rotate(360deg);}
+}
+
+@keyframes process-liner {
+  from{width: 0;}
+  to{width: 100%;}
+}

@@ -1,0 +1,9 @@
+//line  0.5 px
+
+@mixin border-line() {
+  content: " ";
+  position: absolute;
+  -webkit-transform-origin: 0 0;
+  transform-origin: 0 0;
+  z-index: $border-index;
+}
