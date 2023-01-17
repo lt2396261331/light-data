@@ -104,7 +104,7 @@ export default function useFengMap() {
   let mapStatus = ref(false)
 
   //生成加载地图
-  const loadMap = (mapDom) => {
+  const loadMap = (mapDom, showMapControl = true) => {
     if (map) {
       disposeMap()
     }
@@ -138,7 +138,7 @@ export default function useFengMap() {
       let bound = floor.getBound()
       map.setFitView(bound)
 
-      loadMapControl()
+      if (showMapControl) loadMapControl()
     })
 
 
@@ -989,7 +989,7 @@ export default function useFengMap() {
   onBeforeUnmount(() => {
     // can'nt destroy map, 
     // 地图销毁时，操作地图的异步任务还没有执行完毕 此处不能销毁地图
-    // disposeMap()
+    disposeMap()
   })
 
   return {

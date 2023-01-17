@@ -56,14 +56,14 @@
         </el-table-column>
       </el-table>
     </div>
-    <area-detail ref="detailRef" />
+    <location ref="locationRef" />
   </div>
 </template>
 
 <script setup>
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
-import areaDetail from './cpns/area-detail.vue'
+import location from '@/components/location/index.vue'
 
 // 表格数据
 const tableData = [
@@ -106,11 +106,11 @@ const addAreaClick = () => {
 }
 
 // 查看区域
-const detailRef = ref()
+const locationRef = ref()
 // 操作
 const handleRowData = (val, type) => {
   if (type === 'detail') {
-    detailRef.value.isShowDialog = true
+    locationRef.value.isShowDialog = true
   }
 }
 </script>

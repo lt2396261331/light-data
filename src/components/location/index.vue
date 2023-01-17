@@ -21,16 +21,21 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, nextTick } from 'vue'
 import useFengMap from '@/hooks/useFengMap'
 
-const { loadMap } = useFengMap()
+const { loadMap, setFloor, levelList, level } = useFengMap()
 
 const isShowDialog = ref(false)
 
 const mapRef = ref()
 onMounted(() => {
-  loadMap(mapRef.value)
+  nextTick(() => {
+    if (isShowDialog.value) {
+      loadMap(mapRef.value, false)
+      // setFloor(2)
+    }
+  })
 })
 
 //关闭弹框
