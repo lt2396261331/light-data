@@ -9,7 +9,7 @@
     <div class="sel-modal-box">
       <div class="sel-modal-content map-modal">
         <div class="modal-title">
-          <span class="title">查看区域</span>
+          <span class="title" @click="setFloor(3)">{{ title }}</span>
           <span class="iconfont icon-cuo" @click="closeModal"></span>
         </div>
         <div class="map-view">
@@ -21,21 +21,35 @@
 </template>
 
 <script setup>
-import { ref, onMounted, nextTick } from 'vue'
+import { ref, onMounted, watchEffect } from 'vue'
 import useFengMap from '@/hooks/useFengMap'
 
-const { loadMap, setFloor, levelList, level } = useFengMap()
+const props = defineProps({
+  title: {
+    type: String,
+    default: '查看区域'
+  },
+  floor: {
+    type: Number,
+    default: 1
+  }
+})
+
+const { loadMap, setFloor, mapStatus, levelList, level } = useFengMap()
 
 const isShowDialog = ref(false)
 
 const mapRef = ref()
 onMounted(() => {
-  nextTick(() => {
-    if (isShowDialog.value) {
-      loadMap(mapRef.value, false)
-      // setFloor(2)
-    }
-  })
+  loadMap(mapRef.value, false)
+})
+
+// 展示需要展示的信息
+
+watchEffect(() => {
+  if (mapStatus.value) {
+    setFloor(props.floor)
+  }
 })
 
 //关闭弹框

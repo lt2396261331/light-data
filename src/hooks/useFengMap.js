@@ -125,7 +125,6 @@ export default function useFengMap() {
       viewMode: fengmap.FMViewMode.MODE_2D
     }
     map = new fengmap.FMMap(options);
-    
     // 地图加载完成事件
     map.on('loaded', function() {
       // loadDimensionCtrl(map)
@@ -173,6 +172,7 @@ export default function useFengMap() {
     })
     // 地图楼层切换事件
     map.on('levelChanged', function(event) {
+      console.log('levelChanged')
        level.value = event.level
        let floor = map.getFloor(map.getLevel())
        let bound = floor.getBound()
@@ -202,7 +202,7 @@ export default function useFengMap() {
   const setFloor = (val, cb) => {
     map.setLevel({
       level: val,
-      // animate: true,
+      animate: true
       // duration: 0.3,
       // finish: () => {
       //   cb && cb()
@@ -983,6 +983,7 @@ export default function useFengMap() {
     if (map) {
       map.dispose()
       map = null
+      mapStatus.value = false
     }
   }
 
