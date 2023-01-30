@@ -35,7 +35,7 @@ const props = defineProps({
   }
 })
 
-const { loadMap, setFloor, mapStatus, levelList, level } = useFengMap()
+const { loadMap, setFloor, mapStatus, levelList, level, addCircleCover, addPolygonCover } = useFengMap()
 
 const isShowDialog = ref(false)
 
@@ -45,12 +45,16 @@ onMounted(() => {
 })
 
 // 展示需要展示的信息
-
 watchEffect(() => {
   if (mapStatus.value) {
     setFloor(props.floor)
   }
 })
+
+// 展示区域
+const showArea = () => {
+  
+}
 
 //关闭弹框
 const closeModal = () => {
@@ -58,7 +62,8 @@ const closeModal = () => {
 }
 
 defineExpose({
-  isShowDialog
+  isShowDialog,
+  showArea
 })
 </script>
 

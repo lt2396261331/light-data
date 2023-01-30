@@ -101,6 +101,8 @@ import { ref, onMounted, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import useFengMap from '@/hooks/useFengMap'
 import { twoNumEqual } from '@/utils/helper'
+import { addArea } from '@/services/module/hx-light'
+import { ElMessage } from 'element-plus'
 
 const {
   loadMap,
@@ -121,6 +123,8 @@ const mapRef = ref()
 onMounted(() => {
   loadMap(mapRef.value)
 })
+
+const router = useRouter()
 
 //覆盖物类型
 const type = ref('')
@@ -210,11 +214,12 @@ const structureRectangle = points => {
   return [{ ...points[0] }, point3, { ...points[1] }, point4]
 }
 //保存覆盖物
-const saveCover = () => {
+const saveCover = async () => {
   let areas = ''
   let { points } = markerPoints
-
+  let areaType = 1
   if (type.value === 'round') {
+    areaType = 2
     let r = fengmap.FMCalculator.distance(points[0], points[1])
     areas = `${points[0].x},${points[0].y},${r}`
   } else {
@@ -224,10 +229,22 @@ const saveCover = () => {
       areas += !areas ? `${arr.x}&${arr.y}` : `,${arr.x}&${arr.y}`
     })
   }
-  console.log('type', type.value, areas, level.value)
+  // 发送网络请求
+  const res = await addArea({
+    areaName: areaName.value,
+    areaType: areaType,
+    floorId: level.value,
+    areaGroup: groupValue.value.join(','),
+    areas: areas
+  })
+  if (res.errorCode === 0) {
+    ElMessage.success({
+      message: '操作成功'
+    })
+    router.push('/area')
+  }
 }
 // 取消
-const router = useRouter()
 const back = () => {
   router.back()
 }

@@ -49,7 +49,11 @@
         <el-table-column property="group" label="状态" />
         <el-table-column property="group" label="灯坐标x" />
         <el-table-column property="group" label="灯坐标y" />
-        <el-table-column label="灯位置" />
+        <el-table-column label="灯位置">
+          <template #default>
+            <el-button @click="handleClick">按钮</el-button>
+          </template>
+        </el-table-column>
       </el-table>
     </div>
   </div>
