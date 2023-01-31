@@ -74,7 +74,7 @@
         />
       </div>
     </div>
-    <location ref="locationRef" />
+    <location ref="locationRef" :floor="focusLevel"/>
   </div>
 </template>
 
@@ -84,6 +84,9 @@ import { useRouter } from 'vue-router'
 import { storeToRefs } from 'pinia'
 import useAreaStore from '@/stores/areaStore'
 import location from '@/components/location/index.vue'
+
+// 聚焦楼层
+const focusLevel = ref(1)
 
 // 分页参数
 const pageSize = ref(10)
@@ -120,10 +123,13 @@ const handleRowData = (val, type) => {
   if (type === 'detail') {
     locationRef.value.isShowDialog = true
     nextTick(() => {
+      focusLevel.value = val.floorId
       locationRef.value.showArea(val)
     })
   } else if (type === 'delete') {
     console.log('删除')
+  } else {
+    router.push('/update-area/' + val.id)
   }
 }
 

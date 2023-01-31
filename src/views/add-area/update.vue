@@ -1,17 +1,19 @@
 <template>
-  <div class="add-area">
-    <darw-box @save-cover-info="addAreaHandle" />
+  <div class="update">
+    <darw-box action-type="update" @save-cover-info="updateArea" />
   </div>
 </template>
 
 <script setup>
 import darwBox from './cpns/darw-box.vue'
-import { addArea } from '@/services/module/hx-light'
+import { updateAreaInfo } from '@/services/module/hx-light'
 import { useRouter } from 'vue-router'
 
 const router = useRouter()
-const addAreaHandle = async info => {
-  const res = await addArea(info)
+
+const updateArea = async info => {
+  const res = await updateAreaInfo(info)
+
   if (res.errorCode === 0) {
     ElMessage.success({
       message: '操作成功'
@@ -20,3 +22,5 @@ const addAreaHandle = async info => {
   }
 }
 </script>
+
+<style scoped lang="scss"></style>

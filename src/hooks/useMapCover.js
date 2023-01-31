@@ -1,4 +1,4 @@
-import { twoNumEqual, getCenterXY } from '@/utils/helper'
+import { twoNumEqual, getCenterXY, getOneColor } from '@/utils/helper'
 
 export default function useMapCover(
   addPolygonCover,
@@ -20,19 +20,22 @@ export default function useMapCover(
     coverType,
     info = {}
   ) => {
+    // 没颜色 随机一个
+    if (!bgColor) bgColor = getOneColor()
+
     if (type == 2) {
       const areaParams = {
         x: Number(areas[0]),
         y: Number(areas[1]),
         r: Number(areas[2]),
-        bgColor: bgColor || '#f1d11e',
+        bgColor: bgColor,
         level: floorId
       }
       addCircleCover(areaParams, coverType)
       let { x, y, level } = areaParams
       centerPoint = { x, y, level }
       if (info.name) {
-        addTextMarker(x, y, info.name, level, coverType)
+        addTextMarker(x, y, info.name, floorId, coverType)
       }
     } else {
       let points = areas.map(arr => {
@@ -42,7 +45,6 @@ export default function useMapCover(
           y: Number(point[1])
         }
       })
-      console.log('多边形', points)
       const areaParams = {
         points: points,
         bgColor: bgColor,
@@ -52,14 +54,19 @@ export default function useMapCover(
       let { centerX, centerY } = getCenterXY(points)
       centerPoint = { x: centerX, y: centerY, level: floorId }
       if (info.name) {
-        addTextMarker(centerX, centerY, info.name, levelNum, coverType)
+        addTextMarker(centerX, centerY, info.name, floorId, coverType)
       }
     }
 
     if (typeof setAreaDom === 'function' && info) {
-      console.log('添加dom', centerPoint)
       const content = setAreaDom(info)
-      addModalDomMarker({ x: centerPoint.x, y: centerPoint.y, content, level: centerPoint.level, type: 'riskArea'})
+      addModalDomMarker({
+        x: centerPoint.x,
+        y: centerPoint.y,
+        content,
+        level: centerPoint.level,
+        type: 'riskArea'
+      })
       mapCenter({ x: centerPoint.x, y: centerPoint.y })
     }
   }

@@ -37,3 +37,26 @@ export function findAreaMsgByfloorId(floorId) {
     url: '/api/light/findAreaMsgByfloorId.shtml?floorId=1'
   })
 }
+
+// 根据id获取照明区域详细信息
+export function findAreaMsgById(areaId) {
+  return hxRequest.get({
+    url: '/api/light/findAreaMsgById.shtml?id=' + areaId
+  })
+}
+
+// 修改智慧照明区域
+export function updateAreaInfo(info) {
+  return hxRequest.post({
+    url: '/api/light/edit.shtml',
+    params: info
+  })
+}
+
+// 获取所有照明区域
+export function findAllArea() {
+  return hxRequest.get({
+    url: '/api/light/findAllArea.shtml'
+  })
+}
+

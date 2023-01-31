@@ -20,6 +20,10 @@ const router = createRouter({
       component: () => import('@/views/add-area/index.vue')
     },
     {
+      path: '/update-area/:id',
+      component: () => import('@/views/add-area/update.vue')
+    },
+    {
       path: '/light',
       component: () => import('@/views/light/index.vue')
     },
