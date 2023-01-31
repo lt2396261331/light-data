@@ -528,7 +528,7 @@ export default function useFengMap() {
     }
   }
   //移除风险区域覆盖物
-  const removeRiskAreaCover = () => {
+  const removeAreaCover = () => {
     removeGeometryCover('riskAreaCircle', 'riskAreaPolygon')
     removeAllModalDom()
   }
@@ -991,7 +991,7 @@ export default function useFengMap() {
 
   //释放地图
   const disposeMap = () => {
-    removeRiskAreaCover()
+    removeAreaCover()
     removeElectricFenceCover()
     removeLineMarker()
     removeMarker()
@@ -1061,7 +1061,7 @@ export default function useFengMap() {
 
     addCircleCover,
     addPolygonCover,
-    removeRiskAreaCover,
+    removeAreaCover,
     removeElectricFenceCover,
 
     addTextMarker,

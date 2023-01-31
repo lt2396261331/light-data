@@ -77,7 +77,7 @@ const {
   removeLineMarker,
   addCircleCover,
   addPolygonCover,
-  removeRiskAreaCover
+  removeAreaCover
 } = useFengMap()
 
 // 加载地图
@@ -92,7 +92,6 @@ const type = ref('')
 const hasCoverShape = ref(false)
 //记录标注点数组长度
 let pointsLen = 0
-
 
 //设置覆盖物数据
 const setCoverData = list => {
@@ -196,7 +195,7 @@ const back = () => {
 const removeCoverAndMarker = () => {
   removeMarker()
   removeLineMarker()
-  removeRiskAreaCover()
+  removeAreaCover()
   hasCoverShape.value = false
   setMarkerOpenStatus(true)
   pointsLen = 0
@@ -235,7 +234,6 @@ const options = [
     label: 'JavaScript'
   }
 ]
-
 </script>
 
 <style lang="scss" scoped>

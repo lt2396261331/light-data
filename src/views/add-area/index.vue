@@ -115,7 +115,7 @@ const {
   removeLineMarker,
   addCircleCover,
   addPolygonCover,
-  removeRiskAreaCover
+  removeAreaCover
 } = useFengMap()
 
 // 加载地图
@@ -252,7 +252,7 @@ const back = () => {
 const removeCoverAndMarker = () => {
   removeMarker()
   removeLineMarker()
-  removeRiskAreaCover()
+  removeAreaCover()
   hasCoverShape.value = false
   setMarkerOpenStatus(true)
   pointsLen = 0
@@ -276,8 +276,6 @@ watch(markerPoints, (markers, oldMarkers) => {
   }
 })
 
-
-
 // 展示已经绘制的区域
 const showAllArea = ref()
 // 区域名称
@@ -287,16 +285,16 @@ const groupValue = ref([])
 // 分组数据
 const options = [
   {
-    value: 'HTML',
-    label: 'HTML'
+    value: '001',
+    label: '001'
   },
   {
-    value: 'CSS',
-    label: 'CSS'
+    value: '002',
+    label: '002'
   },
   {
-    value: 'JavaScript',
-    label: 'JavaScript'
+    value: '003',
+    label: '003'
   }
 ]
 </script>

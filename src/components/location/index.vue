@@ -23,6 +23,8 @@
 <script setup>
 import { ref, onMounted, watchEffect } from 'vue'
 import useFengMap from '@/hooks/useFengMap'
+import useMapCover from '@/hooks/useMapCover'
+import useMapDomMarker from '@/hooks/useMapDomMarker'
 
 const props = defineProps({
   title: {
@@ -35,7 +37,33 @@ const props = defineProps({
   }
 })
 
-const { loadMap, setFloor, mapStatus, levelList, level, addCircleCover, addPolygonCover } = useFengMap()
+const emit = defineEmits(['closeModal'])
+
+const {
+  loadMap,
+  setFloor,
+  mapStatus,
+  levelList,
+  level,
+  addCircleCover,
+  addPolygonCover,
+  addTextMarker,
+  addModalDomMarker,
+  mapCenter,
+  removeAreaCover,
+  removeTextMarker
+} = useFengMap()
+
+const { setAreaDom } = useMapDomMarker()
+
+const { setCoverType } = useMapCover(
+  addPolygonCover,
+  addCircleCover,
+  addTextMarker,
+  addModalDomMarker,
+  setAreaDom,
+  mapCenter
+)
 
 const isShowDialog = ref(false)
 
@@ -52,13 +80,28 @@ watchEffect(() => {
 })
 
 // 展示区域
-const showArea = () => {
-  
+const showArea = areaInfo => {
+  const areas = areaInfo.areas.split(',')
+  setCoverType(
+    areas,
+    areaInfo.areaType,
+    areaInfo.floorId,
+    '#2a2ff2',
+    'riskArea',
+    areaInfo
+  )
+}
+
+// 移除区域
+const removeCover = () => {
+  removeAreaCover('riskAreaCircle', 'riskAreaPolygon')
+  removeTextMarker('riskArea')
 }
 
 //关闭弹框
 const closeModal = () => {
   isShowDialog.value = false
+  removeCover()
 }
 
 defineExpose({
@@ -123,5 +166,46 @@ defineExpose({
 }
 .mapShow {
   visibility: visible !important;
+}
+::v-deep(.member-dom) {
+  position: absolute;
+  left: -150px;
+  bottom: 40px;
+  display: inline-flex;
+  width: 320px;
+  height: 150px;
+  padding: 12px;
+  box-sizing: border-box;
+  align-items: center;
+  background: rgba(60, 66, 91, 0.6);
+  border-radius: 4px;
+  .arrow {
+    position: absolute;
+    bottom: -16px;
+    left: 156px;
+    border-top: 8px solid rgba(60, 66, 91, 0.6);
+    border-bottom: 8px solid transparent;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+  }
+  .left-img {
+    width: 100px;
+    margin-right: 12px;
+  }
+  .info-box {
+    height: 100%;
+  }
+  .info-item {
+    display: inline-flex;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 8px;
+  }
+  .item-text {
+    display: inline-block;
+    line-height: 16px;
+    font-size: 12px;
+    color: $font-white;
+  }
 }
 </style>

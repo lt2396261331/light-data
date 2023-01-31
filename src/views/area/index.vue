@@ -8,7 +8,9 @@
           size="small"
           v-model="serachValue"
         />
-        <el-button type="primary" size="small" @click="handleSearch">查询</el-button>
+        <el-button type="primary" size="small" @click="handleSearch"
+          >查询</el-button
+        >
       </div>
       <el-button type="primary" size="small" @click="addAreaClick"
         >新增区域</el-button
@@ -77,7 +79,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { nextTick, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { storeToRefs } from 'pinia'
 import useAreaStore from '@/stores/areaStore'
@@ -109,15 +111,17 @@ const addAreaClick = () => {
   router.push('/add-area')
 }
 
-// 查看区域
 const locationRef = ref()
 // 区域信息
-const detailAreaInfo = ref({})
+// const detailAreaInfo = ref({})
 // 操作
 const handleRowData = (val, type) => {
+  // 查看区域
   if (type === 'detail') {
-    detailAreaInfo.value = val
     locationRef.value.isShowDialog = true
+    nextTick(() => {
+      locationRef.value.showArea(val)
+    })
   } else if (type === 'delete') {
     console.log('删除')
   }
