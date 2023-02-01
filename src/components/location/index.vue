@@ -92,6 +92,11 @@ const showArea = areaInfo => {
   )
 }
 
+// 展示灯位置
+const showLightPosition = () => {
+  console.log('展示灯位置')
+}
+
 // 移除区域
 const removeCover = () => {
   removeAreaCover('riskAreaCircle', 'riskAreaPolygon')

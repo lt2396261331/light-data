@@ -10,6 +10,13 @@ class hyRequest {
 
     this.instance.interceptors.request.use(
       config => {
+        if (config.url.includes('/fl')) {
+          const token = localStorage.getItem('token')
+          if (token) {
+            config.headers.Authorization = 'Bearer ' + token
+          }
+        }
+
         return config
       },
       err => {
@@ -18,6 +25,10 @@ class hyRequest {
     )
     this.instance.interceptors.response.use(
       res => {
+        if (res.config.url.includes('/fl')) {
+          const result = JSON.parse(res.data)
+          return result
+        }
         return res
       },
       err => {
@@ -31,24 +42,24 @@ class hyRequest {
       this.instance
         .request(config)
         .then(res => {
+          if (config.url.includes('/fl')) resolve(res)
           resolve(res.data)
         })
         .catch(reject)
     })
   }
   get(config) {
-    return this.request({ ...config, method: 'GET'})
+    return this.request({ ...config, method: 'GET' })
   }
   post(config) {
-    return this.request({ ...config, method: 'POST'})
+    return this.request({ ...config, method: 'POST' })
   }
   delete(config) {
-    return this.request({ ...config, method: 'DELETE'})
+    return this.request({ ...config, method: 'DELETE' })
   }
   put(config) {
-    return this.request({ ...config, method: 'PUT'})
+    return this.request({ ...config, method: 'PUT' })
   }
 }
 
 export default new hyRequest(BASE_URL, TIMEOUT)
-

@@ -1,0 +1,99 @@
+<template>
+  <div class="terminal">
+    <card title="运行终端">
+      <div class="content">
+        <div class="sum">
+          <div class="icon item">
+            <img src="@/assets/image/home/bg-circle.png" alt="" />
+            <img
+              class="inner-img"
+              src="@/assets/image/home/bg-terminal.png"
+              alt=""
+            />
+          </div>
+          <div class="num item">
+            <div>
+              <span class="electricity up-down">8966个</span>
+              <span class="circle">正常运行灯</span>
+            </div>
+            <div>
+              <span class="electricity up-down">0个</span>
+              <span class="circle">故障灯</span>
+            </div>
+          </div>
+        </div>
+        <div class="info">
+          <div class="item">
+            <span class="circle">灯节点</span>
+            <span>8966个</span>
+          </div>
+          <div class="item">
+            <span class="circle">光 敏</span>
+            <span>25689个</span>
+          </div>
+          <div class="item">
+            <span class="circle">电 表</span>
+            <span>200个</span>
+          </div>
+          <div class="item">
+            <span class="circle">网 关</span>
+            <span>25个</span>
+          </div>
+        </div>
+      </div>
+    </card>
+  </div>
+</template>
+
+<script setup>
+import Card from '@/components/card/index.vue'
+</script>
+
+<style scoped lang="scss">
+.terminal {
+  .sum {
+    display: flex;
+    height: 55px;
+    .icon {
+      position: relative;
+      width: 30%;
+      display: flex;
+      justify-content: center;
+      .inner-img {
+        width: 20px;
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+      }
+    }
+    .num {
+      display: flex;
+      flex: 1;
+      justify-content: space-evenly;
+      align-items: center;
+      .electricity {
+        font-size: 20px;
+        margin-bottom: 10px;
+      }
+    }
+  }
+
+  .info {
+    margin-top: 30px;
+    display: flex;
+    flex-wrap: wrap;
+    .item {
+      height: 30px;
+      width: 50%;
+      display: flex;
+      justify-content: space-evenly;
+    }
+  }
+
+  .up-down {
+    display: flex;
+    flex-direction: column;
+  }
+}
+</style>

@@ -144,7 +144,6 @@ export default function useFengMap() {
 
       // 地图点击事件
       map.on('click', function (event) {
-        console.log('点击地图', event)
         let { targets, coords } = event
         //判断选择的是否是图片标注
         let imgTarget = targets.filter(arr => arr.type === 8)
@@ -160,11 +159,6 @@ export default function useFengMap() {
           }
           return
         }
-
-        // // 点击地图添加标注
-        // if (addMarker_click) {
-        //   console.log('添加标注')
-        // }
 
         //添加页面标注点
         let { x, y } = coords

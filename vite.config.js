@@ -25,10 +25,15 @@ export default defineConfig({
   },
   server: {
     proxy: {
-      '/api': {
+      '/hx': {
         target: 'http://40.73.36.45',
         changeOrigin: true,
-        rewrite: path => path.replace(/^\/api/, '')
+        rewrite: path => path.replace(/^\/hx/, '')
+      },
+      '/fl': {
+        target: 'http://47.101.133.246:8089',
+        changeOrigin: true,
+        rewrite: path => path.replace(/^\/fl/, '')
       }
     }
   }

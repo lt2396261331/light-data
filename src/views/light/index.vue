@@ -30,17 +30,17 @@
     <div class="content">
       <el-table
         ref="tableRef"
-        :data="tableData"
+        :data="lgihtList"
         style="width: 100%"
         @selection-change="handleSelectionChange"
         :cell-style="{ textAlign: 'center' }"
         :header-cell-style="{ 'text-align': 'center' }"
-        >
-        <el-table-column type="selection"  />
-        <el-table-column property="id" label="灯节点id"  />
-        <el-table-column property="name" label="灯名称"  />
-        <el-table-column property="group" label="分组一" />
-        <el-table-column property="group" label="分组二" />
+      >
+        <el-table-column type="selection" />
+        <el-table-column property="ID" label="灯节点id" />
+        <el-table-column property="NodeName" label="灯名称" />
+        <el-table-column property="GroupID" label="分组一" />
+        <el-table-column property="GroupIDNumber" label="分组二" />
         <el-table-column property="group" label="亮度" />
         <el-table-column property="group" label="有人亮度" />
         <el-table-column property="group" label="无人亮度" />
@@ -56,12 +56,23 @@
         </el-table-column>
       </el-table>
     </div>
+    <location ref="localRef" title="查看位置" :floor="focusLevel"/>
   </div>
 </template>
 
 <script setup>
 import { ref } from 'vue'
+import useLightStore from '@/stores/lightStore'
+import { storeToRefs } from 'pinia'
 
+import Location from '@/components/location/index.vue'
+
+const lightStore = useLightStore()
+lightStore.fetchLightList()
+
+const { lgihtList } = storeToRefs(lightStore)
+
+const inputValue = ref()
 const selectValue = ref('')
 const options = [
   {
@@ -86,34 +97,15 @@ const options = [
   }
 ]
 
-// 表格数据
-const tableData = [
-  {
-    id: '001',
-    name: 'xxx区域',
-    group: '001,002,003,004,005,006,007'
-  },
-  {
-    id: '002',
-    name: 'xxx区域',
-    group: '001,002,003,004,005,006,007'
-  },
-  {
-    id: '003',
-    name: 'xxx区域',
-    group: '001,002,003,004,005,006,007'
-  },
-  {
-    id: '004',
-    name: 'xxx区域',
-    group: '001,002,003,004,005,006,007'
-  },
-  {
-    id: '005',
-    name: 'xxx区域',
-    group: '001,002,003,004,005,006,007'
-  }
-]
+const localRef = ref()
+const focusLevel = ref(1)
+const handleClick = () => {
+  localRef.value.isShowDialog = true
+}
+
+const handleSelectionChange = val => {
+  console.log('handleSelectionChange', val)
+}
 </script>
 
 <style scoped lang="scss">
