@@ -92,6 +92,10 @@ export default function useFengMap() {
   let memberPoints = reactive({ points: [] })
   //告警图标点集合
   let warnPoints = reactive({ points: [] })
+  // 是否监听多边形覆盖物点击
+  const clickPolygonStatus = ref(false)
+  // 多边形点击集合
+  const polygonPoint = ref([])
   //点击事件点集合
   let clickEvents = reactive({ points: [] })
   //视频图标点集合
@@ -139,12 +143,12 @@ export default function useFengMap() {
         map.setFitView(bound)
 
         if (showMapControl) loadMapControl()
-        resolve()
+        resolve(map)
       })
 
       // 地图点击事件
       map.on('click', function (event) {
-        let { targets, coords } = event
+        let { targets, coords, level } = event
         //判断选择的是否是图片标注
         let imgTarget = targets.filter(arr => arr.type === 8)
         if (imgTarget.length) {
@@ -160,9 +164,16 @@ export default function useFengMap() {
           return
         }
 
-        //添加页面标注点
         let { x, y } = coords
         let xy = `${x},${y}`
+
+        // 判断选择的是否是多边形标注(圆形也是)
+        const polygonTarget = targets.filter(arr => arr.type === 32)
+        if (polygonTarget.length && clickPolygonStatus.value) {
+          polygonPoint.value.push({x, y, level})
+        }
+        
+        //添加页面标注点
         if (addMarkerStatus) {
           if (
             !markerGather.includes(xy) ||
@@ -258,6 +269,11 @@ export default function useFengMap() {
   const setMarkerOpenStatus = status => {
     addMarkerStatus = status
   }
+  // 设置是否监听点击地图多边形覆盖物
+  const setCickPolygonStatus = status => {
+    clickPolygonStatus.value = status
+  }
+
   //添加坐标点
   const addMarker = ({ x, y, level, size, url }) => {
     let locationMarker = new fengmap.FMLocationMarker({
@@ -845,6 +861,11 @@ export default function useFengMap() {
     })
   }
 
+  // 生成圆形
+  const circleBuilder = (radius, centerXy, segments) => {
+    return fengmap.FMCalculator.circleBuilder(radius, centerXy, segments)
+  }
+
   //判断某个点是否在多边形上
   const pointInArea = (point, polygon) => {
     return fengmap.FMCalculator.isContain(polygon, point)
@@ -1028,6 +1049,7 @@ export default function useFengMap() {
     memberPoints,
     warnPoints,
     videoPoints,
+    polygonPoint,
 
     level,
     levelList,
@@ -1035,6 +1057,7 @@ export default function useFengMap() {
     loadMap,
     disposeMap,
     setMarkerOpenStatus,
+    setCickPolygonStatus,
 
     setFloor,
     setFullFloor,
@@ -1079,6 +1102,7 @@ export default function useFengMap() {
 
     pointInArea,
     calculator,
+    circleBuilder,
     addHotAreas,
     clearHotAreas,
 

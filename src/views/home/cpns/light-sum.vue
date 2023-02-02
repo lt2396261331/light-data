@@ -1,6 +1,6 @@
 <template>
   <div class="light-sum">
-    <card title="月电量&节能">
+    <card title="各亮度灯数量">
       <echarts :option="option"></echarts>
     </card>
   </div>
@@ -34,16 +34,9 @@ const option = {
         { value: 484, name: '100%' }
       ],
       itemStyle: {
-        normal: {
-          color: function (colors) {
-            var colorList = [
-              '#D7C6B3',
-              '#F9C78B',
-              '#F5A544',
-              '#F98A05'
-            ]
-            return colorList[colors.dataIndex]
-          }
+        color: function (colors) {
+          var colorList = ['#D7C6B3', '#F9C78B', '#F5A544', '#F98A05']
+          return colorList[colors.dataIndex]
         }
       },
       emphasis: {
