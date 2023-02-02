@@ -60,3 +60,10 @@ export function findAllArea() {
   })
 }
 
+// 删除区域
+export function deleteArea(id) {
+  return hxRequest.post({
+    url: '/hx/light/delete.shtml?id=' + id
+  })
+}
+

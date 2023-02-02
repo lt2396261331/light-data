@@ -1,9 +1,22 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
-import { getGroupsByIDs, getLightList } from '@/services/module/fl-light'
+import {
+  getLayers,
+  getGroupsByIDs,
+  getLightList
+} from '@/services/module/fl-light'
+import { COUNTRY_NAME } from '@/constants'
 
 
 const useLightStore = defineStore('light', () => {
+  // 获取当前院，楼栋，楼层信息
+  const countryInfo = ref([])
+  const fetchGetCountryList = async () => {
+    const { data } = await getLayers()
+    countryInfo.value = data.find(
+      country => country.CountryName === COUNTRY_NAME
+    )
+  }
 
   // 灯信息列表
   const lgihtList = ref([])
@@ -19,10 +32,13 @@ const useLightStore = defineStore('light', () => {
   // 获取组信息
   const fetchGroupList = async () => {
     const { data } = await getGroupsByIDs()
-    console.log(data)
+    groupList.value = data
   }
 
   return {
+    countryInfo,
+    fetchGetCountryList,
+
     lgihtList,
     fetchLightList,
 

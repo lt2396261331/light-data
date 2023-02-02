@@ -31,7 +31,7 @@ export default defineConfig({
         rewrite: path => path.replace(/^\/hx/, '')
       },
       '/fl': {
-        target: 'http://47.101.133.246:8089',
+        target: 'http://47.101.133.246:8077',
         changeOrigin: true,
         rewrite: path => path.replace(/^\/fl/, '')
       }

@@ -109,92 +109,90 @@ export default function useFengMap() {
 
   //生成加载地图
   const loadMap = (mapDom, showMapControl = true) => {
-    return new Promise((resolve, reject) => {
-      if (map) {
-        disposeMap()
-      }
+    if (map) {
+      disposeMap()
+    }
 
-      let options = {
-        appName: 'huixun',
-        key: 'b0318a6707ee2e6a8cbc63f3dd2bd82a',
-        mapID: '1596039795349127169',
-        container: mapDom,
-        mapURL: '/fengmap/',
-        themeURL: '/theme/',
-        themeID: '1596039795349127169',
-        highlightColor: 'none',
-        floorSpace: 25, // 设置楼层高度
-        // nonFocusAlphaMode: true,
-        nonFocusAlpha: 0.2,
-        // mapZoom: 20,
-        viewMode: fengmap.FMViewMode.MODE_2D
-      }
-      map = new fengmap.FMMap(options)
-      // 地图加载完成事件
-      map.on('loaded', function () {
-        // loadDimensionCtrl(map)
-        // loadStretchBar(map)
-        level.value = map.getLevel()
-        levelList.value = map.getLevels()
-        mapStatus.value = true
+    let options = {
+      appName: 'huixun',
+      key: 'b0318a6707ee2e6a8cbc63f3dd2bd82a',
+      mapID: '1596039795349127169',
+      container: mapDom,
+      mapURL: '/fengmap/',
+      themeURL: '/theme/',
+      themeID: '1596039795349127169',
+      highlightColor: 'none',
+      floorSpace: 25, // 设置楼层高度
+      // nonFocusAlphaMode: true,
+      nonFocusAlpha: 0.2,
+      // mapZoom: 20,
+      viewMode: fengmap.FMViewMode.MODE_2D
+    }
+    map = new fengmap.FMMap(options)
+    // 地图加载完成事件
+    map.on('loaded', function () {
+      // loadDimensionCtrl(map)
+      // loadStretchBar(map)
+      level.value = map.getLevel()
+      levelList.value = map.getLevels()
+      mapStatus.value = true
 
-        let floor = map.getFloor(map.getLevel())
-        let bound = floor.getBound()
-        map.setFitView(bound)
+      let floor = map.getFloor(map.getLevel())
+      let bound = floor.getBound()
+      map.setFitView(bound)
 
-        if (showMapControl) loadMapControl()
-        resolve(map)
-      })
-
-      // 地图点击事件
-      map.on('click', function (event) {
-        let { targets, coords, level } = event
-        //判断选择的是否是图片标注
-        let imgTarget = targets.filter(arr => arr.type === 8)
-        if (imgTarget.length) {
-          // console.log(imgTarget)
-          let { x, y, url } = imgTarget[0]
-          if (url.includes('warn.png') || url.includes('warn1.png')) {
-            warnPoints.points.push(`${x}-${y}`)
-          } else if (url.includes('video.png')) {
-            videoPoints.points.push(`${x}-${y}`)
-          } else {
-            memberPoints.points.push(`${x}-${y}-${level.value}`)
-          }
-          return
-        }
-
-        let { x, y } = coords
-        let xy = `${x},${y}`
-
-        // 判断选择的是否是多边形标注(圆形也是)
-        const polygonTarget = targets.filter(arr => arr.type === 32)
-        if (polygonTarget.length && clickPolygonStatus.value) {
-          polygonPoint.value.push({x, y, level})
-        }
-        
-        //添加页面标注点
-        if (addMarkerStatus) {
-          if (
-            !markerGather.includes(xy) ||
-            (markerGather.length > 2 && markerGather[0] === xy)
-          ) {
-            markerGather.push(xy)
-            markerPoints.points.push({ x, y, xy: `${x},${y}` })
-          }
-        } else {
-          clickEvents.points.push(xy)
-        }
-      })
-      // 地图楼层切换事件
-      map.on('levelChanged', function (event) {
-        console.log('levelChanged')
-        level.value = event.level
-        let floor = map.getFloor(map.getLevel())
-        let bound = floor.getBound()
-        map.setFitView(bound)
-      })
+      if (showMapControl) loadMapControl()
     })
+
+    // 地图点击事件
+    map.on('click', function (event) {
+      let { targets, coords, level } = event
+      //判断选择的是否是图片标注
+      let imgTarget = targets.filter(arr => arr.type === 8)
+      if (imgTarget.length) {
+        // console.log(imgTarget)
+        let { x, y, url } = imgTarget[0]
+        if (url.includes('warn.png') || url.includes('warn1.png')) {
+          warnPoints.points.push(`${x}-${y}`)
+        } else if (url.includes('video.png')) {
+          videoPoints.points.push(`${x}-${y}`)
+        } else {
+          memberPoints.points.push(`${x}-${y}-${level.value}`)
+        }
+        return
+      }
+
+      let { x, y } = coords
+      let xy = `${x},${y}`
+
+      // 判断选择的是否是多边形标注(圆形也是)
+      const polygonTarget = targets.filter(arr => arr.type === 32)
+      if (polygonTarget.length && clickPolygonStatus.value) {
+        polygonPoint.value.push({ x, y, level })
+      }
+
+      //添加页面标注点
+      if (addMarkerStatus) {
+        if (
+          !markerGather.includes(xy) ||
+          (markerGather.length > 2 && markerGather[0] === xy)
+        ) {
+          markerGather.push(xy)
+          markerPoints.points.push({ x, y, xy: `${x},${y}` })
+        }
+      } else {
+        clickEvents.points.push(xy)
+      }
+    })
+    // 地图楼层切换事件
+    map.on('levelChanged', function (event) {
+      console.log('levelChanged')
+      level.value = event.level
+      let floor = map.getFloor(map.getLevel())
+      let bound = floor.getBound()
+      map.setFitView(bound)
+    })
+
     // console.log(fengmap)
   }
 
@@ -217,7 +215,6 @@ export default function useFengMap() {
 
   //设置楼层
   const setFloor = (val, cb) => {
-    console.log(val)
     map.setLevel({
       level: val,
       animate: true

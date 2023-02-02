@@ -85,6 +85,9 @@ import { storeToRefs } from 'pinia'
 import useAreaStore from '@/stores/areaStore'
 import location from '@/components/location/index.vue'
 
+import { deleteArea } from '@/services/module/hx-light'
+import { ElMessage } from 'element-plus'
+
 // 聚焦楼层
 const focusLevel = ref(1)
 
@@ -118,7 +121,7 @@ const locationRef = ref()
 // 区域信息
 // const detailAreaInfo = ref({})
 // 操作
-const handleRowData = (val, type) => {
+const handleRowData = async (val, type) => {
   // 查看区域
   if (type === 'detail') {
     locationRef.value.isShowDialog = true
@@ -127,7 +130,18 @@ const handleRowData = (val, type) => {
       locationRef.value.showArea(val)
     })
   } else if (type === 'delete') {
-    console.log('删除')
+    console.log('删除', val)
+    const res = await deleteArea(val.id)
+    if (res.errorCode === 0) {
+      ElMessage.success({
+        message: '删除成功'
+      })
+      getData()
+    } else {
+      ElMessage.warning({
+        message: res.msg
+      })
+    }
   } else {
     router.push('/update-area/' + val.id)
   }

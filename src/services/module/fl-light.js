@@ -17,7 +17,7 @@ export function getLayers() {
 // 根据院/楼栋/层级/区ID 获取组列表
 export function getGroupsByIDs() {
   return hxRequest.get({
-    url: '/fl/api/T8/GetGroupsByIDs'
+    url: '/fl/api/T8/getGroupsByIDs'
   })
 }
 
@@ -28,3 +28,25 @@ export function getYearMeterData() {
   })
 }
 
+// 多组全亮/恢复 操作组则添加后面的参数
+// 全局全亮/恢复 
+export function SetTempTask(
+  CountryID,
+  MotionBr,
+  NoMotionBr,
+  BuildingID,
+  FloorID,
+  DeviceAreaID
+) {
+  return hxRequest.post({
+    url: '/fl/api/T8/SetTempTask',
+    data: {
+      CountryID,
+      MotionBr,
+      NoMotionBr,
+      BuildingID,
+      FloorID,
+      DeviceAreaID
+    }
+  })
+}

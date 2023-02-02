@@ -16,25 +16,38 @@
       <day-save-eletricity />
     </div>
     <div class="action">
-      <el-button type="primary" size="small">全局全亮</el-button>
-      <el-button type="primary" size="small">全局恢复</el-button>
+      <el-button
+        type="primary"
+        size="small"
+        @click="setAllLightTempTask('light')"
+        >全局全亮</el-button
+      >
+      <el-button type="primary" size="small" @click="setAllLightTempTask"
+        >全局恢复</el-button
+      >
     </div>
     <light-info class="home-light-info" />
     <area-info
       class="home-area-info"
       :area-info="clickAreaInfo"
+      :message="tip"
       v-if="showAreaInfoStatus"
       @close="showAreaInfoStatus = false"
+      @all-bright="showGroupAllBright"
+      @reset-auto="showGroupAllBright"
     />
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted, nextTick, watch } from 'vue'
+import { ref, onMounted, nextTick, watch, watchEffect } from 'vue'
 import { storeToRefs } from 'pinia'
 import useFengmap from '@/hooks/useFengMap'
 import useMapCover from '@/hooks/useMapCover'
 import useAreaStore from '@/stores/areaStore'
+import useLightStore from '@/stores/lightStore'
+
+import { SetTempTask } from '@/services/module/fl-light'
 
 import SaveElectricity from './cpns/save-electricity.vue'
 import MonthElectricity from './cpns/month-electricity.vue'
@@ -46,10 +59,12 @@ import daySaveEletricity from '@/views/home/cpns/day-save-eletricity.vue'
 
 import LightInfo from './cpns/light-info.vue'
 import AreaInfo from './cpns/area-info.vue'
+import { ElMessage } from 'element-plus'
 
 const mapRef = ref()
 const {
   loadMap,
+  mapStatus,
   polygonPoint,
   setCickPolygonStatus,
   circleBuilder,
@@ -65,22 +80,80 @@ const { setCoverType } = useMapCover(
   addTextMarker
 )
 
+const lightStore = useLightStore()
+const { countryInfo, groupList } = storeToRefs(lightStore)
+
 const areaStore = useAreaStore()
-areaStore.fetchAllAreaList()
 const { allAreaList } = storeToRefs(areaStore)
 
 onMounted(async () => {
-  await loadMap(mapRef.value)
-  nextTick(() => {
-    for (const area of allAreaList.value) {
-      const areas = area.areas.split(',')
-      setCoverType(areas, area.areaType, area.floorId, null, 'riskArea', {
-        name: area.areaName
-      })
-    }
-    setCickPolygonStatus(true)
-  })
+  loadMap(mapRef.value)
 })
+
+// 地图加成完成
+watchEffect(async () => {
+  // console.log('地图加成完成', mapState.value)
+  if (mapStatus.value) {
+    await areaStore.fetchAllAreaList()
+    nextTick(() => {
+      for (const area of allAreaList.value) {
+        const areas = area.areas.split(',')
+        setCoverType(areas, area.areaType, area.floorId, null, 'riskArea', {
+          name: area.areaName
+        })
+      }
+      setCickPolygonStatus(true)
+    })
+  }
+})
+
+// 全局全亮/恢复
+const setAllLightTempTask = async type => {
+  // 全亮
+  if (type === 'light') {
+    const res = await SetTempTask(countryInfo.CountryID, 10, 10)
+    console.log(res)
+    ElMessage({
+      message: res.message
+    })
+    return
+  }
+  // 恢复
+  const res = await SetTempTask(countryInfo.CountryID, -2, -2)
+  console.log(res)
+  ElMessage({
+    message: res.message
+  })
+}
+
+
+const tip = ref(false)
+// 多组全亮/回复
+const showGroupAllBright = async (group, type) => {
+  const groups = group.split(',')
+  const groupInfo = groups.map(arr => {
+    const info = groupList.value.find(
+      item => item.DeviceAreaID == arr
+    )
+    if (info) {
+      if (type === 'light') {
+        // 全亮
+        return SetTempTask(info.CountryID, 10, 10, info.BuildingID, info.FloorID, info.DeviceAreaID)
+      }
+      return SetTempTask(info.CountryID, -2, -2, info.BuildingID, info.FloorID, info.DeviceAreaID)
+    }
+  })
+  try {
+    const res = await Promise.all(groupInfo)
+    tip.value = true
+    setTimeout(() => {
+      tip.value = false
+    }, 1000);
+    console.log(res)
+  } catch (error) {
+    console.log(error)
+  }
+}
 
 // 监听区域点击
 const clickAreaInfo = ref({})

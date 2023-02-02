@@ -81,10 +81,10 @@
                 placeholder="请选择"
               >
                 <el-option
-                  v-for="item in options"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
+                  v-for="item in groupList"
+                  :key="item.ID"
+                  :label="item.DeviceAreaID"
+                  :value="item.DeviceAreaID"
                 />
               </el-select>
             </div>
@@ -105,13 +105,14 @@
 </template>
 
 <script setup>
-import { ref, onMounted, watch, computed, nextTick } from 'vue'
+import { ref, onMounted, watch, computed, nextTick, watchEffect } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { storeToRefs } from 'pinia'
 
 import useFengMap from '@/hooks/useFengMap'
 import useMapCover from '@/hooks/useMapCover'
 import useAreaStore from '@/stores/areaStore'
+import useLightStore from '@/stores/lightStore'
 
 import { twoNumEqual } from '@/utils/helper'
 import { findAreaMsgById } from '@/services/module/hx-light'
@@ -131,6 +132,7 @@ const {
   loadMap,
   level,
   setFloor,
+  mapStatus,
   setMarkerOpenStatus,
   removeMarker,
   markerPoints,
@@ -157,6 +159,10 @@ const { setCoverType } = useMapCover(
 const areaStore = useAreaStore()
 areaStore.fetchAllAreaList()
 
+// 获取分组信息
+const lightStore = useLightStore()
+const { groupList } = storeToRefs(lightStore)
+
 const { allAreaList } = storeToRefs(areaStore)
 
 // 加载地图
@@ -168,21 +174,7 @@ const showAllArea = ref()
 const areaName = ref()
 // 选择分组
 const groupValue = ref([])
-// 分组数据
-const options = [
-  {
-    value: '001',
-    label: '001'
-  },
-  {
-    value: '002',
-    label: '002'
-  },
-  {
-    value: '003',
-    label: '003'
-  }
-]
+
 
 //覆盖物类型
 const type = ref('')
@@ -203,22 +195,28 @@ const updateAreaId = route.params.id
 const updateAreaInfo = ref({})
 // id存在则是修改
 onMounted(async () => {
-  await loadMap(mapRef.value)
+  loadMap(mapRef.value)
 
-  if (updateAreaId) {
-    const { data } = await findAreaMsgById(updateAreaId)
-    updateAreaInfo.value = data
-    nextTick(() => {
-      const group = data.areaGroup.split(',')
-      areaName.value = data.areaName
-      groupValue.value = group
+})
 
-      const areas = data.areas.split(',')
-      setCoverType(areas, data.areaType, data.floorId, null, 'electricFence', {
-        name: data.areaName
+// 地图加成完成
+watchEffect(async () => {
+  if (mapStatus.value) {
+    if (updateAreaId) {
+      const { data } = await findAreaMsgById(updateAreaId)
+      updateAreaInfo.value = data
+      nextTick(() => {
+        const group = data.areaGroup.split(',')
+        areaName.value = data.areaName
+        groupValue.value = group
+
+        const areas = data.areas.split(',')
+        setCoverType(areas, data.areaType, data.floorId, null, 'electricFence', {
+          name: data.areaName
+        })
+        setFloor(data.floorId)
       })
-      setFloor(data.floorId)
-    })
+    }
   }
 })
 

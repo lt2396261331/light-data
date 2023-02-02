@@ -26,8 +26,9 @@ class hyRequest {
     this.instance.interceptors.response.use(
       res => {
         if (res.config.url.includes('/fl')) {
-          const result = JSON.parse(res.data)
-          return result
+          const data = JSON.parse(res.data.data)
+          res.data.data = data
+          return res.data
         }
         return res
       },
