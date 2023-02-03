@@ -3,50 +3,50 @@ import hxRequest from '../request'
 // 获取灯信息
 export function getLightList() {
   return hxRequest.get({
-    url: '/fl/api/T8/GetLightNodes'
+    url: '/fl/api/HX/GetLightNodes'
   })
 }
 
 // 获取当前院，楼栋，楼层
 export function getLayers() {
   return hxRequest.get({
-    url: '/fl/api/T8/GetLayers'
+    url: '/fl/api/HX/GetLayers'
   })
 }
 
 // 根据院/楼栋/层级/区ID 获取组列表
 export function getGroupsByIDs() {
   return hxRequest.get({
-    url: '/fl/api/T8/getGroupsByIDs'
+    url: '/fl/api/HX/getGroupsByIDs'
   })
 }
 
 // 节约用电情况
 export function getYearMeterData() {
   return hxRequest.get({
-    url: '/fl/api/T8/GetYearMeterData?type=-1&countryId=1&sensorID=-1&month=undefined'
+    url: '/fl/api/HX/GetYearMeterData?type=-1&countryId=1&sensorID=-1&month=undefined'
   })
 }
 
 // 多组全亮/恢复 操作组则添加后面的参数
-// 全局全亮/恢复 
+// 全局全亮/恢复
 export function SetTempTask(
-  CountryID,
+  countryID,
   MotionBr,
   NoMotionBr,
-  BuildingID,
-  FloorID,
-  DeviceAreaID
+  buildingID,
+  floorID,
+  deviceAreaID
 ) {
   return hxRequest.post({
-    url: '/fl/api/T8/SetTempTask',
+    url: '/fl/api/HX/SetTempTask',
     data: {
-      CountryID,
+      countryID,
       MotionBr,
       NoMotionBr,
-      BuildingID,
-      FloorID,
-      DeviceAreaID
+      buildingID,
+      floorID,
+      deviceAreaID
     }
   })
 }

@@ -52,6 +52,8 @@ export default function useFengMap() {
     aep: [],
     fence: []
   }
+  // 灯图片标记列表
+  const lightMarkerList = ref({})
   //人员定位点集合
   let memberPositionMarker = {}
   //人员定位人员名集合
@@ -326,6 +328,8 @@ export default function useFengMap() {
       memberPositionMarker[id] = imageMarker
     } else if (type === 'video') {
       pointMarker.videoList.push(imageMarker)
+    } else if (type === 'light') {
+      lightMarkerList.value.push(imageMarker)
     }
   }
   //移除视频标记点

@@ -83,8 +83,8 @@
                 <el-option
                   v-for="item in groupList"
                   :key="item.ID"
-                  :label="item.DeviceAreaID"
-                  :value="item.DeviceAreaID"
+                  :label="item.deviceAreaID"
+                  :value="item.deviceAreaID"
                 />
               </el-select>
             </div>

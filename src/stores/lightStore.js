@@ -14,7 +14,7 @@ const useLightStore = defineStore('light', () => {
   const fetchGetCountryList = async () => {
     const { data } = await getLayers()
     countryInfo.value = data.find(
-      country => country.CountryName === COUNTRY_NAME
+      country => country.countryName === COUNTRY_NAME
     )
   }
 

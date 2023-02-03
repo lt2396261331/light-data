@@ -37,21 +37,21 @@
         :header-cell-style="{ 'text-align': 'center' }"
       >
         <el-table-column type="selection" />
-        <el-table-column property="ID" label="灯节点id" />
-        <el-table-column property="NodeName" label="灯名称" />
-        <el-table-column property="GroupID" label="分组一" />
-        <el-table-column property="GroupIDNumber" label="分组二" />
+        <el-table-column property="nodeIEEEAddress" label="灯节点id" />
+        <el-table-column property="nodeName" label="灯名称" />
+        <el-table-column property="groupIDNumber" label="分组一" />
+        <el-table-column property="" label="分组二" />
         <el-table-column property="group" label="亮度" />
         <el-table-column property="group" label="有人亮度" />
         <el-table-column property="group" label="无人亮度" />
         <el-table-column property="group" label="延迟时间" />
         <el-table-column property="group" label="当前执行" />
-        <el-table-column property="group" label="状态" />
-        <el-table-column property="group" label="灯坐标x" />
-        <el-table-column property="group" label="灯坐标y" />
+        <el-table-column property="status" label="状态" />
+        <el-table-column property="x" label="灯坐标x" />
+        <el-table-column property="y" label="灯坐标y" />
         <el-table-column label="灯位置">
-          <template #default>
-            <el-button @click="handleClick">按钮</el-button>
+          <template #default="scoped">
+            <el-button @click="handleClick(scoped)">按钮</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -99,7 +99,8 @@ const options = [
 
 const localRef = ref()
 const focusLevel = ref(1)
-const handleClick = () => {
+const handleClick = (val) => {
+  console.log(val)
   localRef.value.isShowDialog = true
 }
 

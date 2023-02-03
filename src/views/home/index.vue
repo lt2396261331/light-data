@@ -81,7 +81,7 @@ const { setCoverType } = useMapCover(
 )
 
 const lightStore = useLightStore()
-const { countryInfo, groupList } = storeToRefs(lightStore)
+const { countryInfo, groupList, lgihtList } = storeToRefs(lightStore)
 
 const areaStore = useAreaStore()
 const { allAreaList } = storeToRefs(areaStore)
@@ -95,7 +95,9 @@ watchEffect(async () => {
   // console.log('地图加成完成', mapState.value)
   if (mapStatus.value) {
     await areaStore.fetchAllAreaList()
+    await lightStore.fetchLightList()
     nextTick(() => {
+      // 显示智慧照明区域
       for (const area of allAreaList.value) {
         const areas = area.areas.split(',')
         setCoverType(areas, area.areaType, area.floorId, null, 'riskArea', {
@@ -103,6 +105,7 @@ watchEffect(async () => {
         })
       }
       setCickPolygonStatus(true)
+      // 显示灯位置
     })
   }
 })
@@ -111,7 +114,7 @@ watchEffect(async () => {
 const setAllLightTempTask = async type => {
   // 全亮
   if (type === 'light') {
-    const res = await SetTempTask(countryInfo.CountryID, 10, 10)
+    const res = await SetTempTask(countryInfo.countryID, 10, 10)
     console.log(res)
     ElMessage({
       message: res.message
@@ -119,28 +122,39 @@ const setAllLightTempTask = async type => {
     return
   }
   // 恢复
-  const res = await SetTempTask(countryInfo.CountryID, -2, -2)
+  const res = await SetTempTask(countryInfo.countryID, -2, -2)
   console.log(res)
   ElMessage({
     message: res.message
   })
 }
 
-
 const tip = ref(false)
 // 多组全亮/回复
 const showGroupAllBright = async (group, type) => {
   const groups = group.split(',')
   const groupInfo = groups.map(arr => {
-    const info = groupList.value.find(
-      item => item.DeviceAreaID == arr
-    )
+    const info = groupList.value.find(item => item.deviceAreaID == arr)
     if (info) {
       if (type === 'light') {
         // 全亮
-        return SetTempTask(info.CountryID, 10, 10, info.BuildingID, info.FloorID, info.DeviceAreaID)
+        return SetTempTask(
+          info.countryID,
+          10,
+          10,
+          info.buildingID,
+          info.floorID,
+          info.deviceAreaID
+        )
       }
-      return SetTempTask(info.CountryID, -2, -2, info.BuildingID, info.FloorID, info.DeviceAreaID)
+      return SetTempTask(
+        info.countryID,
+        -2,
+        -2,
+        info.buildingID,
+        info.floorID,
+        info.deviceAreaID
+      )
     }
   })
   try {
@@ -148,7 +162,7 @@ const showGroupAllBright = async (group, type) => {
     tip.value = true
     setTimeout(() => {
       tip.value = false
-    }, 1000);
+    }, 1000)
     console.log(res)
   } catch (error) {
     console.log(error)

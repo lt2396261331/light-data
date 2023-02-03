@@ -49,6 +49,7 @@ const {
   addPolygonCover,
   addTextMarker,
   addModalDomMarker,
+  addImageMarker,
   mapCenter,
   removeAreaCover,
   removeTextMarker
@@ -93,8 +94,8 @@ const showArea = areaInfo => {
 }
 
 // 展示灯位置
-const showLightPosition = () => {
-  console.log('展示灯位置')
+const showLightPosition = (lightInfo) => {
+  console.log('展示灯位置', lightInfo)
 }
 
 // 移除区域
@@ -111,7 +112,8 @@ const closeModal = () => {
 
 defineExpose({
   isShowDialog,
-  showArea
+  showArea,
+  showLightPosition
 })
 </script>
 

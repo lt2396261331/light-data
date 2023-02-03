@@ -1,6 +1,7 @@
 import axios from 'axios'
 import { BASE_URL, TIMEOUT } from './config'
 
+
 class hyRequest {
   constructor(baseURL, timeout = 100000) {
     this.instance = axios.create({
@@ -10,12 +11,12 @@ class hyRequest {
 
     this.instance.interceptors.request.use(
       config => {
-        if (config.url.includes('/fl')) {
-          const token = localStorage.getItem('token')
-          if (token) {
-            config.headers.Authorization = 'Bearer ' + token
-          }
-        }
+        // if (config.url.includes('/fl')) {
+        //   const token = localStorage.getItem('token')
+        //   if (token) {
+        //     config.headers.Authorization = 'Bearer ' + token
+        //   }
+        // }
 
         return config
       },
@@ -26,13 +27,16 @@ class hyRequest {
     this.instance.interceptors.response.use(
       res => {
         if (res.config.url.includes('/fl')) {
-          const data = JSON.parse(res.data.data)
-          res.data.data = data
           return res.data
         }
         return res
       },
-      err => {
+      async err => {
+        if (err.config.url.includes('/login')) {
+          return err
+        }
+        // const res = await login()
+        console.log('---', err.config)
         return err
       }
     )
