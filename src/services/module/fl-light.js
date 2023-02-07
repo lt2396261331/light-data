@@ -1,7 +1,33 @@
 import hxRequest from '../request'
 
 // 获取灯信息
-export function getLightList() {
+export function getLightListBySearch({
+  PageNum,
+  PageSize,
+  GroupIDNumber,
+  NodeName,
+  Status,
+  NodelEEEAddress,
+  CountryID,
+  GatewayAddress
+}) {
+  return hxRequest.get({
+    url: '/fl/api/HX/GetLightNodesBySearch',
+    params: {
+      PageNum,
+      PageSize,
+      GroupIDNumber,
+      NodeName,
+      Status,
+      NodelEEEAddress,
+      CountryID,
+      GatewayAddress
+    }
+  })
+}
+
+// 获取灯配置表
+export function getLightNodes(){
   return hxRequest.get({
     url: '/fl/api/HX/GetLightNodes'
   })

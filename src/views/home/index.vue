@@ -81,7 +81,8 @@ const { setCoverType } = useMapCover(
 )
 
 const lightStore = useLightStore()
-const { countryInfo, groupList, lgihtList } = storeToRefs(lightStore)
+lightStore.fetchYearMeterData()
+const { countryInfo, groupList } = storeToRefs(lightStore)
 
 const areaStore = useAreaStore()
 const { allAreaList } = storeToRefs(areaStore)

@@ -11,13 +11,6 @@ class hyRequest {
 
     this.instance.interceptors.request.use(
       config => {
-        // if (config.url.includes('/fl')) {
-        //   const token = localStorage.getItem('token')
-        //   if (token) {
-        //     config.headers.Authorization = 'Bearer ' + token
-        //   }
-        // }
-
         return config
       },
       err => {
@@ -32,11 +25,6 @@ class hyRequest {
         return res
       },
       async err => {
-        if (err.config.url.includes('/login')) {
-          return err
-        }
-        // const res = await login()
-        console.log('---', err.config)
         return err
       }
     )

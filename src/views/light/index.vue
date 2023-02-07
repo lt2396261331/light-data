@@ -2,10 +2,21 @@
   <div class="light">
     <div class="search-box">
       <div class="group item">
-        <span class="title">分组</span>
+        <span class="title">分组:</span>
         <el-select v-model="selectValue" placeholder="请选择" size="small">
           <el-option
-            v-for="item in options"
+            v-for="item in groupList"
+            :key="item.deviceAreaID"
+            :label="item.deviceAreaID"
+            :value="item.deviceAreaID"
+          />
+        </el-select>
+      </div>
+      <div class="status item">
+        <span class="title">状态:</span>
+        <el-select v-model="statusValue" placeholder="请选择" size="small">
+          <el-option
+            v-for="item in statusOption"
             :key="item.value"
             :label="item.label"
             :value="item.value"
@@ -18,7 +29,13 @@
           placeholder="请输入灯名/id"
           size="small"
         />
-        <el-button class="btn" size="small" type="primary">查询</el-button>
+        <el-button
+          class="btn"
+          size="small"
+          type="primary"
+          @click="btnSearchClick"
+          >查询</el-button
+        >
       </div>
       <div class="action item">
         <el-button class="btn" size="small" plain type="primary"
@@ -30,33 +47,53 @@
     <div class="content">
       <el-table
         ref="tableRef"
-        :data="lgihtList"
+        :data="lightListInfo.list"
         style="width: 100%"
         @selection-change="handleSelectionChange"
         :cell-style="{ textAlign: 'center' }"
         :header-cell-style="{ 'text-align': 'center' }"
       >
         <el-table-column type="selection" />
-        <el-table-column property="nodeIEEEAddress" label="灯节点id" />
-        <el-table-column property="nodeName" label="灯名称" />
+        <el-table-column
+          property="nodeIEEEAddress"
+          label="灯节点id"
+          width="100"
+        />
+        <el-table-column property="nodeName" label="灯名称" width="200" />
         <el-table-column property="groupIDNumber" label="分组一" />
-        <el-table-column property="" label="分组二" />
-        <el-table-column property="group" label="亮度" />
-        <el-table-column property="group" label="有人亮度" />
-        <el-table-column property="group" label="无人亮度" />
+        <el-table-column property="brightness" label="亮度" />
+        <el-table-column property="motionBr" label="有人亮度" />
+        <el-table-column property="noMotionBr" label="无人亮度" />
         <el-table-column property="group" label="延迟时间" />
-        <el-table-column property="group" label="当前执行" />
+        <el-table-column property="isUserControl" label="当前执行" />
         <el-table-column property="status" label="状态" />
         <el-table-column property="x" label="灯坐标x" />
         <el-table-column property="y" label="灯坐标y" />
         <el-table-column label="灯位置">
           <template #default="scoped">
-            <el-button @click="handleClick(scoped)">按钮</el-button>
+            <img
+              src="@/assets/image/home/position.png"
+              @click="handleClick(scoped.row)"
+              class="icon"
+            />
           </template>
         </el-table-column>
       </el-table>
+      <div class="pagination-box">
+        <el-pagination
+          v-model:current-page="pageNo"
+          v-model:page-size="pageSize"
+          :page-sizes="[10, 20, 25, 50]"
+          layout="total, sizes, prev, pager, next, jumper"
+          :total="lightListInfo.total"
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+          :small="true"
+          class="page-pagination"
+        />
+      </div>
     </div>
-    <location ref="localRef" title="查看位置" :floor="focusLevel"/>
+    <location ref="localRef" title="查看位置" :floor="focusLevel" />
   </div>
 </template>
 
@@ -68,44 +105,74 @@ import { storeToRefs } from 'pinia'
 import Location from '@/components/location/index.vue'
 
 const lightStore = useLightStore()
-lightStore.fetchLightList()
-
-const { lgihtList } = storeToRefs(lightStore)
+const { lightListInfo, countryInfo, groupList } = storeToRefs(lightStore)
 
 const inputValue = ref()
 const selectValue = ref('')
-const options = [
+
+const statusOption = [
   {
-    value: 'Option1',
-    label: 'Option1'
+    value: '',
+    label: '全部'
   },
   {
-    value: 'Option2',
-    label: 'Option2'
+    value: '在线',
+    label: '在线'
   },
   {
-    value: 'Option3',
-    label: 'Option3'
+    value: '离线',
+    label: '离线'
   },
   {
-    value: 'Option4',
-    label: 'Option4'
-  },
-  {
-    value: 'Option5',
-    label: 'Option5'
+    value: '故障',
+    label: '故障'
   }
 ]
+const statusValue = ref('')
 
 const localRef = ref()
 const focusLevel = ref(1)
-const handleClick = (val) => {
+const handleClick = val => {
   console.log(val)
-  localRef.value.isShowDialog = true
+  if (val.x, val.y) {
+    localRef.value.isShowDialog = true
+  }
 }
 
 const handleSelectionChange = val => {
   console.log('handleSelectionChange', val)
+}
+// 分页参数
+const pageSize = ref(10)
+const pageNo = ref(1)
+
+const getData = () => {
+  const params = {
+    PageNum: pageNo.value,
+    PageSize: pageSize.value,
+    GroupIDNumber: selectValue.value,
+    NodeName: inputValue.value,
+    Status: statusValue.value,
+    NodelEEEAddress: '',
+    CountryID: countryInfo.value.countryID
+  }
+  lightStore.fetchLightListBySearch(params)
+}
+
+getData()
+
+const handleSizeChange = val => {
+  pageSize.value = val
+  getData()
+}
+
+const handleCurrentChange = val => {
+  pageNo.value = val
+  getData()
+}
+
+const btnSearchClick = () => {
+  getData()
 }
 </script>
 
@@ -115,7 +182,7 @@ const handleSelectionChange = val => {
 
   .search-box {
     display: flex;
-    width: 55vw;
+    /* width: 55vw; */
 
     .input {
       .btn {
@@ -123,18 +190,10 @@ const handleSelectionChange = val => {
       }
     }
 
-    .group {
-      .title {
-        width: 30px;
-        margin-right: 5px;
-      }
-    }
-
     .item {
       flex: 1;
       margin-left: 20px;
       display: flex;
-      justify-content: space-around;
       align-items: center;
       &.input {
         flex: 1.5;
@@ -143,11 +202,27 @@ const handleSelectionChange = val => {
       .upload {
         color: #777;
       }
+      .title {
+        margin-right: 15px;
+      }
     }
   }
 
   .content {
     padding: 30px 20px;
+
+    .icon {
+      width: 20px;
+      cursor: pointer;
+    }
+  }
+}
+
+.pagination-box {
+  display: flex;
+  justify-content: end;
+  .page-pagination {
+    margin-top: 20px;
   }
 }
 </style>
