@@ -336,12 +336,12 @@ const saveCover = async () => {
   if (type.value === 'round') {
     areaType = 2
     let r = fengmap.FMCalculator.distance(points[0], points[1])
-    areas = `${points[0].x},${points[0].y},${r}`
+    areas = `${Math.ceil(points[0].x)},${Math.ceil(points[0].y)},${Math.ceil(r)}`
   } else {
     let pointMarkers =
       type.value === 'polygon' ? points : structureRectangle(points)
     pointMarkers.forEach(arr => {
-      areas += !areas ? `${arr.x}&${arr.y}` : `,${arr.x}&${arr.y}`
+      areas += !areas ? `${Math.ceil(arr.x)}&${Math.ceil(arr.y)}` : `,${Math.ceil(arr.x)}&${Math.ceil(arr.y)}`
     })
   }
   const info = {
@@ -351,6 +351,7 @@ const saveCover = async () => {
     areaGroup: groupValue.value.join(','),
     areas: areas
   }
+  console.log('info', info)
   if (updateAreaId) info.id = updateAreaId
   emits('saveCoverInfo', info)
 }
@@ -379,7 +380,6 @@ watch(type, val => {
 
 watch(markerPoints, (markers, oldMarkers) => {
   let { points } = markers
-  console.log(points)
   //标注点长度不等于0且不小于已记录的标注点集合长度
   if (points.length && pointsLen <= points.length) {
     pointsLen = points.length //记录标注点数组长度

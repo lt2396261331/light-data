@@ -200,7 +200,6 @@ export const objToForm = data => {
 
 //两个数字模糊相等(相差值不大于10)
 export const twoNumEqual = (num1, num2) => {
-  console.log(num1 - num2)
   let result = num1 - num2
   return result <= 1 && result >= -1
 }

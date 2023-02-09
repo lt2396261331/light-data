@@ -19,6 +19,10 @@ const updateArea = async info => {
       message: '操作成功'
     })
     router.push('/area')
+  } else {
+    ElMessage.error({
+      message: res.msg
+    })
   }
 }
 </script>

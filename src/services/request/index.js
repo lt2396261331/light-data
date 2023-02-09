@@ -19,10 +19,7 @@ class hyRequest {
     )
     this.instance.interceptors.response.use(
       res => {
-        if (res.config.url.includes('/fl')) {
-          return res.data
-        }
-        return res
+        return res.data
       },
       async err => {
         return err
@@ -35,8 +32,7 @@ class hyRequest {
       this.instance
         .request(config)
         .then(res => {
-          if (config.url.includes('/fl')) resolve(res)
-          resolve(res.data)
+          resolve(res)
         })
         .catch(reject)
     })

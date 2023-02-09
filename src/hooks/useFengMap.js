@@ -125,8 +125,8 @@ export default function useFengMap() {
       key: 'b0318a6707ee2e6a8cbc63f3dd2bd82a',
       mapID: '1596039795349127169',
       container: mapDom,
-      mapURL: '/fengmap/',
-      themeURL: '/theme/',
+      mapURL: './fengmap/',
+      themeURL: './theme/',
       themeID: '1596039795349127169',
       highlightColor: 'none',
       floorSpace: 25, // 设置楼层高度
@@ -285,10 +285,9 @@ export default function useFengMap() {
       x,
       y,
       size: size || 12,
-      url: url || '/mapImgs/local.png',
+      url: url || './mapImgs/local.png',
       level: level || map.getLevel()
     })
-    console.log(url)
     locationMarker.addTo(map)
     pointMarker.markList.push(locationMarker)
   }

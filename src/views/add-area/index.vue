@@ -8,6 +8,7 @@
 import darwBox from './cpns/darw-box.vue'
 import { addArea } from '@/services/module/hx-light'
 import { useRouter } from 'vue-router'
+import { ElMessage } from 'element-plus';
 
 const router = useRouter()
 const addAreaHandle = async info => {
@@ -17,6 +18,10 @@ const addAreaHandle = async info => {
       message: '操作成功'
     })
     router.push('/area')
+  } else {
+    ElMessage.error({
+      message: res.msg
+    })
   }
 }
 </script>

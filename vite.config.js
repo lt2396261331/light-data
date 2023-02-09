@@ -9,6 +9,7 @@ import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  base: "./",
   plugins: [
     vue(),
     AutoImport({
@@ -25,10 +26,9 @@ export default defineConfig({
   },
   server: {
     proxy: {
-      '/hx': {
+      '/light': {
         target: 'http://40.73.36.45',
-        changeOrigin: true,
-        rewrite: path => path.replace(/^\/hx/, '')
+        changeOrigin: true
       },
       '/fl': {
         target: 'http://47.101.133.246:8077',
