@@ -8,10 +8,10 @@
     <div class="left">
       <save-electricity />
       <month-electricity />
-      <light-sum />
+      <light-sum :every-light-info="lightSum" />
     </div>
     <div class="right">
-      <terminal />
+      <terminal :success-light="normalLight" :error-light="errorLight"/>
       <day-eletricity />
       <day-save-eletricity />
     </div>
@@ -40,7 +40,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, nextTick, watch, watchEffect } from 'vue'
+import { ref, onMounted, nextTick, watch, watchEffect, computed } from 'vue'
 import { storeToRefs } from 'pinia'
 import useFengmap from '@/hooks/useFengMap'
 import useMapCover from '@/hooks/useMapCover'
@@ -82,10 +82,28 @@ const { setCoverType } = useMapCover(
 
 const lightStore = useLightStore()
 lightStore.fetchYearMeterData()
-const { countryInfo, groupList } = storeToRefs(lightStore)
+const { countryInfo, groupList, lightAllList } = storeToRefs(lightStore)
 
 const areaStore = useAreaStore()
 const { allAreaList } = storeToRefs(areaStore)
+
+// 各灯数量
+const lightSum = computed(() => {
+  const light10 = lightAllList.value.filter(arr => arr.motionBr === 10).length
+  const light8 = lightAllList.value.filter(arr => arr.motionBr === 8).length
+  const light1 = lightAllList.value.filter(arr => arr.motionBr === 1).length
+  const light0 = lightAllList.value.filter(arr => arr.motionBr === 0).length
+  return {
+    light10,
+    light8,
+    light1,
+    light0
+  }
+})
+
+// 终端
+const normalLight = computed(() => lightAllList.value.filter(arr => arr.status === '在线').length)
+const errorLight = computed(() => lightAllList.value.length - normalLight.value)
 
 onMounted(async () => {
   loadMap(mapRef.value)
@@ -283,5 +301,24 @@ watch(polygonPoint.value, () => {
     border: 1px solid rgb(39, 93, 113);
     border-radius: 5px;
   }
+}
+
+
+/* 楼层控件 */
+/* 楼层列表 */
+::v-deep(.fm-layer-list) {
+  background-color: #0b203d !important;
+}
+
+/* 多楼层按钮  */
+::v-deep(.fm-btn-layer) {
+  background-color: #0b203d !important;
+}
+/* 3d按钮 */
+::v-deep(.fm-control-tool-3d) {
+  background-color: #0b203d !important;
+}
+::v-deep(.fm-control-groups) {
+  box-shadow: #1e82fa 0px 0px 5px !important;
 }
 </style>

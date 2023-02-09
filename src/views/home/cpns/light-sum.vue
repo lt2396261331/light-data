@@ -7,10 +7,19 @@
 </template>
 
 <script setup>
+import { computed } from 'vue'
+
 import Echarts from '@/components/echarts/index.vue'
 import Card from '@/components/card/index.vue'
 
-const option = {
+const props = defineProps({
+  everyLightInfo: {
+    type: Object,
+    default: () => ({})
+  }
+})
+
+const option = computed(() => ({
   title: {},
   tooltip: {
     trigger: 'item'
@@ -28,10 +37,10 @@ const option = {
       type: 'pie',
       radius: '50%',
       data: [
-        { value: 1048, name: '0%' },
-        { value: 735, name: '10%' },
-        { value: 580, name: '80%' },
-        { value: 484, name: '100%' }
+        { value: Number(props.everyLightInfo.light0), name: '0%' },
+        { value: Number(props.everyLightInfo.light1), name: '10%' },
+        { value: Number(props.everyLightInfo.light8), name: '80%' },
+        { value: Number(props.everyLightInfo.light10), name: '100%' }
       ],
       itemStyle: {
         color: function (colors) {
@@ -48,7 +57,7 @@ const option = {
       }
     }
   ]
-}
+}))
 </script>
 
 <style scoped lang="scss"></style>

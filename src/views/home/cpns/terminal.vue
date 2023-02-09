@@ -13,11 +13,11 @@
           </div>
           <div class="num item">
             <div>
-              <span class="electricity up-down">8966个</span>
+              <span class="electricity up-down">{{ successLight }}个</span>
               <span class="circle">正常运行灯</span>
             </div>
             <div>
-              <span class="electricity up-down">0个</span>
+              <span class="electricity up-down">{{ errorLight }}个</span>
               <span class="circle">故障灯</span>
             </div>
           </div>
@@ -47,6 +47,18 @@
 
 <script setup>
 import Card from '@/components/card/index.vue'
+
+defineProps({
+  successLight: {
+    type: Number,
+    default: 100
+  },
+  errorLight: {
+    type: Number,
+    default: 0
+  }
+})
+
 </script>
 
 <style scoped lang="scss">

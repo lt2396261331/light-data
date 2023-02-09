@@ -176,11 +176,12 @@ defineExpose({
 }
 ::v-deep(.member-dom) {
   position: absolute;
+  font-size: 16px;
   left: -150px;
   bottom: 40px;
   display: inline-flex;
-  width: 320px;
-  height: 150px;
+  width: 200px;
+  height: 120px;
   padding: 12px;
   box-sizing: border-box;
   align-items: center;

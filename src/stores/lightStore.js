@@ -66,6 +66,7 @@ const useLightStore = defineStore('light', () => {
     fetchGetCountryList,
 
     lightListInfo,
+    lightAllList,
     fetchLightList,
     fetchLightListBySearch,
 

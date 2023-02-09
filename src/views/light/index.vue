@@ -73,9 +73,10 @@
           <template #default="scoped">
             <img
               src="@/assets/image/home/position.png"
-              @click="handleClick(scoped.row)"
+              @click="handleDeployClick(scoped.row)"
               class="icon"
             />
+            <span class="text" @click="handleLockClick(scoped.row)">查看</span>
           </template>
         </el-table-column>
       </el-table>
@@ -99,8 +100,9 @@
 
 <script setup>
 import { ref } from 'vue'
-import useLightStore from '@/stores/lightStore'
 import { storeToRefs } from 'pinia'
+import { useRouter } from 'vue-router'
+import useLightStore from '@/stores/lightStore'
 
 import Location from '@/components/location/index.vue'
 
@@ -132,11 +134,14 @@ const statusValue = ref('')
 
 const localRef = ref()
 const focusLevel = ref(1)
-const handleClick = val => {
+const handleLockClick = val => {
   console.log(val)
-  if (val.x, val.y) {
-    localRef.value.isShowDialog = true
-  }
+  localRef.value.isShowDialog = true
+}
+const router = useRouter()
+const handleDeployClick = val => {
+  console.log(val)
+  router.push('/deploy-light')
 }
 
 const handleSelectionChange = val => {
@@ -214,6 +219,16 @@ const btnSearchClick = () => {
     .icon {
       width: 20px;
       cursor: pointer;
+      user-select: none;
+    }
+
+    .text {
+      margin-left: 10px;
+      vertical-align: bottom;
+      font-size: 13px;
+      color: #409eff;
+      cursor: pointer;
+      user-select: none;
     }
   }
 }

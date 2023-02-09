@@ -3,8 +3,9 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
-import * as echarts from 'echarts'
+import { ref, onMounted, watchEffect } from 'vue'
+
+import useEcharts from './hooks/use-echarts'
 
 const props = defineProps({
   option: {
@@ -12,11 +13,10 @@ const props = defineProps({
     default: () => ({})
   }
 })
-
 const drawRef = ref()
 onMounted(() => {
-  const myChart = echarts.init(drawRef.value)
-  myChart.setOption(props.option)
+  const { setOptions } = useEcharts(drawRef.value)
+  watchEffect(() => setOptions(props.option))
 })
 </script>
 

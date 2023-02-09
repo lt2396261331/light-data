@@ -1,5 +1,5 @@
 import { computed, reactive, ref, onBeforeUnmount } from 'vue'
-// import { useStore } from 'vuex'
+import { useRoute } from 'vue-router'
 
 export default function useFengMap() {
   //地图对象
@@ -109,11 +109,16 @@ export default function useFengMap() {
   //地图加载状态
   let mapStatus = ref(false)
 
+  const route = useRoute()
+
   //生成加载地图
   const loadMap = (mapDom, showMapControl = true) => {
     if (map) {
       disposeMap()
     }
+
+    let backgroundColor = ''
+    if (route.path === '/home') backgroundColor = '#0b203d'
 
     let options = {
       appName: 'huixun',
@@ -127,6 +132,7 @@ export default function useFengMap() {
       floorSpace: 25, // 设置楼层高度
       // nonFocusAlphaMode: true,
       nonFocusAlpha: 0.2,
+      backgroundColor: backgroundColor,
       // mapZoom: 20,
       viewMode: fengmap.FMViewMode.MODE_2D
     }

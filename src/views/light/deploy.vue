@@ -1,15 +1,16 @@
 <template>
   <div class="deploy">
     <div class="title">
-      <span>在地图标记</span>
-      <span>灯节点</span>
+      <h3>在地图标记</h3>
+      <h3>灯节点</h3>
+      <h3>所属分组</h3>
     </div>
     <div class="map-box" ref="mapRef"></div>
   </div>
 </template>
 
 <script setup>
-import useFengMap from '@/hooks/useFengMap';
+import useFengMap from '@/hooks/useFengMap'
 import { onMounted, ref } from 'vue'
 
 const { loadMap } = useFengMap()
@@ -18,12 +19,18 @@ const mapRef = ref()
 onMounted(() => {
   loadMap(mapRef.value)
 })
-
 </script>
 
 <style scoped lang="scss">
 .deploy {
   padding: 30px 40px;
+
+  .title {
+    width: 30%;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
 
   .map-box {
     position: relative;
