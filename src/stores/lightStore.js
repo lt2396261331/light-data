@@ -5,7 +5,9 @@ import {
   getGroupsByIDs,
   getLightNodes,
   getLightListBySearch,
-  getYearMeterData
+  getYearMeterData,
+  getMonthMeterData,
+  getTotalTerminalCount
 } from '@/services/module/fl-light'
 import { COUNTRY_NAME } from '@/constants'
 
@@ -50,15 +52,34 @@ const useLightStore = defineStore('light', () => {
   const yearMeterData = reactive({
     monthList: [],
     thisYear: [],
-    lastYear: []
+    originalEnergyList: []
+  })
+  const monthMeterData = reactive({
+    dayList: [],
+    thisMonth: [],
+    originalEnergyList: []
   })
   // 获取电表年数据
   const fetchYearMeterData = async () => {
     const { data } = await getYearMeterData()
-    yearMeterData.lastYear = data.lastYear
+    yearMeterData.originalEnergyList = data.originalEnergyList
     yearMeterData.thisYear = data.thisYear
     yearMeterData.monthList = data.monthList
-    console.log('data', data)
+  }
+
+  // 电表月数据
+  const fetchMonthMeterData = async () => {
+    const { data } = await getMonthMeterData()
+    monthMeterData.dayList = data.dayList
+    monthMeterData.thisMonth = data.thisMonth
+    monthMeterData.originalEnergyList = data.originalEnergyList
+  }
+
+  // 获取终端数据
+  const terminalInfo = ref({})
+  const fetchTerminalData = async () => {
+    const res = await getTotalTerminalCount()
+    terminalInfo.value = res.data
   }
 
   return {
@@ -74,7 +95,12 @@ const useLightStore = defineStore('light', () => {
     fetchGroupList,
 
     yearMeterData,
-    fetchYearMeterData
+    monthMeterData,
+    fetchYearMeterData,
+    fetchMonthMeterData,
+
+    terminalInfo,
+    fetchTerminalData
   }
 })
 

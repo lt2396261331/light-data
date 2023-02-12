@@ -7,19 +7,28 @@
 </template>
 
 <script setup>
+import { computed } from 'vue'
+
 import Echarts from '@/components/echarts/index.vue'
 import Card from '@/components/card/index.vue'
 
-const option = {
+const props = defineProps({
+  meterInfo: {
+    type: Object,
+    default: () => ({})
+  }
+})
+
+const option = computed(() => ({
   xAxis: {
     type: 'category',
-    data: [
-      1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21,
-      22, 23, 24, 25, 26, 27, 28, 29, 30, 31
-    ]
+    data: props.meterInfo.dayList
   },
   yAxis: {
-    type: 'value'
+    type: 'value',
+    axisLabel: {
+      formatter: '{value} KW'
+    },
   },
   tooltip: {
     trigger: 'axis'
@@ -32,7 +41,7 @@ const option = {
   },
   series: [
     {
-      data: [150, 230, 224, 218, 135, 147, 260],
+      data: props.meterInfo.thisMonth,
       type: 'line',
       lineStyle: {
         color: '#fff'
@@ -42,7 +51,7 @@ const option = {
       }
     }
   ]
-}
+}))
 </script>
 
 <style scoped lang="scss">

@@ -1,2 +1,2 @@
 // 园区名称
-export const COUNTRY_NAME = '镇江工厂'
+export const COUNTRY_NAME = 'IDC数据中心-周浦'

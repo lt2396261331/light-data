@@ -25,19 +25,19 @@
         <div class="info">
           <div class="item">
             <span class="circle">灯节点</span>
-            <span>8966个</span>
+            <span>{{ terminalInfo.lightCount }}个</span>
           </div>
           <div class="item">
             <span class="circle">光 敏</span>
-            <span>25689个</span>
+            <span>{{ terminalInfo.photosensitiveCount }}个</span>
           </div>
           <div class="item">
             <span class="circle">电 表</span>
-            <span>200个</span>
+            <span>{{ terminalInfo.meterCount }}个</span>
           </div>
           <div class="item">
             <span class="circle">网 关</span>
-            <span>25个</span>
+            <span>{{ terminalInfo.gatewayCount }}个</span>
           </div>
         </div>
       </div>
@@ -56,6 +56,10 @@ defineProps({
   errorLight: {
     type: Number,
     default: 0
+  },
+  terminalInfo: {
+    type: Object,
+    default: () => ({})
   }
 })
 

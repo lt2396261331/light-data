@@ -53,7 +53,7 @@ export default function useFengMap() {
     fence: []
   }
   // 灯图片标记列表
-  const lightMarkerList = ref({})
+  const lightMarkerList = ref([])
   //人员定位点集合
   let memberPositionMarker = {}
   //人员定位人员名集合
@@ -68,8 +68,6 @@ export default function useFengMap() {
   let lineMarkerList = []
   //是否添加标记点
   let addMarkerStatus = false
-  // 点击打点标记
-  const addMarker_click = false
   //分析器列表
   let analyserList = []
   //路线段列表
@@ -90,6 +88,8 @@ export default function useFengMap() {
   let markerPoints = reactive({
     points: []
   })
+  // 灯控图标点集合
+  const lightPoints = reactive({ points: []})
   //人员图标点集合
   let memberPoints = reactive({ points: [] })
   //告警图标点集合
@@ -117,6 +117,7 @@ export default function useFengMap() {
       disposeMap()
     }
 
+    // 首页地图需要设置背景色
     let backgroundColor = ''
     if (route.path === '/home') backgroundColor = '#0b203d'
 
@@ -154,19 +155,13 @@ export default function useFengMap() {
 
     // 地图点击事件
     map.on('click', function (event) {
+      removeModalDom()
       let { targets, coords, level } = event
       //判断选择的是否是图片标注
       let imgTarget = targets.filter(arr => arr.type === 8)
       if (imgTarget.length) {
-        // console.log(imgTarget)
         let { x, y, url } = imgTarget[0]
-        if (url.includes('warn.png') || url.includes('warn1.png')) {
-          warnPoints.points.push(`${x}-${y}`)
-        } else if (url.includes('video.png')) {
-          videoPoints.points.push(`${x}-${y}`)
-        } else {
-          memberPoints.points.push(`${x}-${y}-${level.value}`)
-        }
+        lightPoints.points.push({ x, y, level })
         return
       }
 
@@ -185,6 +180,7 @@ export default function useFengMap() {
           !markerGather.includes(xy) ||
           (markerGather.length > 2 && markerGather[0] === xy)
         ) {
+          if (isNaN(x) || isNaN(y)) return
           markerGather.push(xy)
           markerPoints.points.push({ x, y, xy: `${x},${y}` })
         }
@@ -303,7 +299,7 @@ export default function useFengMap() {
       anchor: fengmap.FMMarkerAnchor.BOTTOM
     })
     let floorLevel = level || map.getLevel()
-    // console.log('map--->', map)
+
     let floor = map.getFloor(floorLevel)
     imageMarker.collision = false
     imageMarker.visible = true
@@ -1056,6 +1052,7 @@ export default function useFengMap() {
     warnPoints,
     videoPoints,
     polygonPoint,
+    lightPoints,
 
     level,
     levelList,

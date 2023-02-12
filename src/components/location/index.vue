@@ -22,6 +22,7 @@
 
 <script setup>
 import { ref, onMounted, watchEffect } from 'vue'
+import { getLightUrl } from '@/utils/helper'
 import useFengMap from '@/hooks/useFengMap'
 import useMapCover from '@/hooks/useMapCover'
 import useMapDomMarker from '@/hooks/useMapDomMarker'
@@ -43,8 +44,6 @@ const {
   loadMap,
   setFloor,
   mapStatus,
-  levelList,
-  level,
   addCircleCover,
   addPolygonCover,
   addTextMarker,
@@ -55,7 +54,7 @@ const {
   removeTextMarker
 } = useFengMap()
 
-const { setAreaDom } = useMapDomMarker()
+const { setAreaDom, setLightInfoDom } = useMapDomMarker()
 
 const { setCoverType } = useMapCover(
   addPolygonCover,
@@ -94,8 +93,26 @@ const showArea = areaInfo => {
 }
 
 // 展示灯位置
-const showLightPosition = (lightInfo) => {
-  console.log('展示灯位置', lightInfo)
+const showLightPosition = lightInfo => {
+  // 设置imageMarker
+  const imageMarkerInfo = {
+    x: lightInfo.x,
+    y: lightInfo.y,
+    level: lightInfo.groupID,
+    type: 'light',
+    url: getLightUrl(lightInfo.status, lightInfo.brightness)
+  }
+  addImageMarker(imageMarkerInfo)
+  // 获取dom内容
+  const content = setLightInfoDom(lightInfo)
+  addModalDomMarker({
+    x: lightInfo.x,
+    y: lightInfo.y,
+    level: lightInfo.groupID,
+    type: 'light',
+    content
+  })
+  mapCenter({ x: lightInfo.x, y: lightInfo.y })
 }
 
 // 移除区域
@@ -214,6 +231,61 @@ defineExpose({
     line-height: 16px;
     font-size: 12px;
     color: $font-white;
+  }
+}
+::v-deep(.warn-dom) {
+  position: absolute;
+  left: -104px;
+  bottom: 40px;
+  display: inline-flex;
+  width: 240px;
+  height: 180px;
+  padding: 12px;
+  box-sizing: border-box;
+  align-items: center;
+  background: rgba(60, 66, 91, 0.6);
+  border-radius: 4px;
+  animation: shine 1.4s linear infinite;
+  //box-shadow: 0 0 12px red;
+  .arrow {
+    position: absolute;
+    bottom: -16px;
+    left: 112px;
+    border-top: 8px solid rgba(60, 66, 91, 0.6);
+    border-bottom: 8px solid transparent;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+  }
+  .info-box {
+    height: 100%;
+  }
+  .info-item {
+    display: inline-flex;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 8px;
+    color: $font-white;
+  }
+  .item-left {
+    display: inline-block;
+    line-height: 16px;
+    font-size: 14px;
+    width: 84px;
+    margin-right: 8px;
+    text-align: right;
+  }
+  .item-left-b {
+    display: inline-block;
+    line-height: 16px;
+    font-size: 14px;
+    width: 80px;
+    margin-right: 8px;
+    text-align: right;
+  }
+  .item-text {
+    display: inline-block;
+    line-height: 16px;
+    font-size: 14px;
   }
 }
 </style>

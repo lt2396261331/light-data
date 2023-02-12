@@ -7,10 +7,19 @@
 </template>
 
 <script setup>
+import { computed } from 'vue'
+
 import Echarts from '@/components/echarts/index.vue'
 import Card from '@/components/card/index.vue'
 
-const option = {
+const props = defineProps({
+  electricityInfo: {
+    type: Object,
+    default: () => ({})
+  }
+})
+
+const option = computed(() => ({
   title: {},
   tooltip: {
     trigger: 'axis',
@@ -35,44 +44,34 @@ const option = {
   },
   yAxis: {
     type: 'value',
-    boundaryGap: [0, 0.01]
+    boundaryGap: [0, 0.01],
+    axisLabel: {
+      formatter: '{value} KW'
+    },
   },
   xAxis: {
     type: 'category',
-    data: [
-      '1月',
-      '2月',
-      '3月',
-      '4月',
-      '5月',
-      '6月',
-      '7月',
-      '8月',
-      '9月',
-      '10月',
-      '11月',
-      '12月'
-    ]
+    data: props.electricityInfo.monthList.map(item => `${item}月`)
   },
   series: [
     {
-      name: '月电量',
+      name: '月电量(kw/h)',
       type: 'bar',
-      data: [18203, 23489, 29034, 104970, 131744, 630230],
+      data: props.electricityInfo.originalEnergyList,
       itemStyle: {
         color: '#5087EC'
       }
     },
     {
-      name: '节能',
+      name: '节能(kw/h)',
       type: 'bar',
-      data: [19325, 23438, 31000, 121594, 134141, 681807],
+      data: props.electricityInfo.thisYear,
       itemStyle: {
         color: '#68BBC4'
       }
     }
   ]
-}
+}))
 </script>
 
 <style scoped lang="scss">

@@ -7,13 +7,17 @@
     <div class="p-ab-center map-container" ref="mapRef"></div>
     <div class="left">
       <save-electricity />
-      <month-electricity />
+      <month-electricity :electricity-info="yearMeterData" />
       <light-sum :every-light-info="lightSum" />
     </div>
     <div class="right">
-      <terminal :success-light="normalLight" :error-light="errorLight"/>
-      <day-eletricity />
-      <day-save-eletricity />
+      <terminal
+        :success-light="normalLight"
+        :error-light="errorLight"
+        :terminal-info="terminalInfo"
+      />
+      <day-eletricity :meter-info="monthMeterData" />
+      <day-save-eletricity :meter-info="monthMeterData" />
     </div>
     <div class="action">
       <el-button
@@ -44,8 +48,12 @@ import { ref, onMounted, nextTick, watch, watchEffect, computed } from 'vue'
 import { storeToRefs } from 'pinia'
 import useFengmap from '@/hooks/useFengMap'
 import useMapCover from '@/hooks/useMapCover'
+import useMapDomMarKer from '@/hooks/useMapDomMarker'
+
 import useAreaStore from '@/stores/areaStore'
 import useLightStore from '@/stores/lightStore'
+
+import { getLightUrl } from '@/utils/helper'
 
 import { SetTempTask } from '@/services/module/fl-light'
 
@@ -71,8 +79,15 @@ const {
   pointInArea,
   addPolygonCover,
   addCircleCover,
-  addTextMarker
+  addTextMarker,
+  addImageMarker,
+  lightPoints,
+  addModalDomMarker,
+  removeModalDom,
+  mapCenter
 } = useFengmap()
+
+const { setLightInfoDom } = useMapDomMarKer()
 
 const { setCoverType } = useMapCover(
   addPolygonCover,
@@ -82,7 +97,16 @@ const { setCoverType } = useMapCover(
 
 const lightStore = useLightStore()
 lightStore.fetchYearMeterData()
-const { countryInfo, groupList, lightAllList } = storeToRefs(lightStore)
+lightStore.fetchMonthMeterData()
+lightStore.fetchTerminalData()
+const {
+  countryInfo,
+  groupList,
+  lightAllList,
+  yearMeterData,
+  monthMeterData,
+  terminalInfo
+} = storeToRefs(lightStore)
 
 const areaStore = useAreaStore()
 const { allAreaList } = storeToRefs(areaStore)
@@ -102,7 +126,9 @@ const lightSum = computed(() => {
 })
 
 // 终端
-const normalLight = computed(() => lightAllList.value.filter(arr => arr.status === '在线').length)
+const normalLight = computed(
+  () => lightAllList.value.filter(arr => arr.status === '在线').length
+)
 const errorLight = computed(() => lightAllList.value.length - normalLight.value)
 
 onMounted(async () => {
@@ -125,6 +151,17 @@ watchEffect(async () => {
       }
       setCickPolygonStatus(true)
       // 显示灯位置
+      for (const light of lightAllList.value) {
+        const imageMarkerInfo = {
+          x: light.x,
+          y: light.y,
+          level: 1,
+          type: 'light',
+          id: 'aaa-bbb-ccc',
+          url: getLightUrl(light.status, light.brightness)
+        }
+        addImageMarker(imageMarkerInfo)
+      }
     })
   }
 })
@@ -216,9 +253,32 @@ watch(polygonPoint.value, () => {
   })
   if (clickAreaInfo.value) showAreaInfoStatus.value = true
 })
+
+watch(lightPoints, newValue => {
+  // removeModalDom()
+  const clickLight = newValue.points[newValue.points.length - 1]
+  const lightInfo = lightAllList.value.find(
+    item =>
+      item.x == clickLight.x &&
+      item.y == clickLight.y &&
+      item.groupID == clickLight.level
+  )
+  console.log(lightInfo)
+  if (lightInfo) {
+    const content = setLightInfoDom(lightInfo)
+    addModalDomMarker({
+      x: lightInfo.x,
+      y: lightInfo.y,
+      level: lightInfo.groupID,
+      content
+    })
+  }
+  // mapCenter({ x: lightInfo.x, y: lightInfo.y })
+})
 </script>
 
 <style lang="scss" scoped>
+@import '@/assets/scss/variable';
 .home {
   background-color: #0b203d;
   height: 100vh;
@@ -303,7 +363,6 @@ watch(polygonPoint.value, () => {
   }
 }
 
-
 /* 楼层控件 */
 /* 楼层列表 */
 ::v-deep(.fm-layer-list) {
@@ -320,5 +379,61 @@ watch(polygonPoint.value, () => {
 }
 ::v-deep(.fm-control-groups) {
   box-shadow: #1e82fa 0px 0px 5px !important;
+}
+
+::v-deep(.warn-dom) {
+  position: absolute;
+  left: -104px;
+  bottom: 40px;
+  display: inline-flex;
+  width: 240px;
+  height: 180px;
+  padding: 12px;
+  box-sizing: border-box;
+  align-items: center;
+  background: rgba(60, 66, 91, 0.6);
+  border-radius: 4px;
+  animation: shine 1.4s linear infinite;
+  //box-shadow: 0 0 12px red;
+  .arrow {
+    position: absolute;
+    bottom: -16px;
+    left: 112px;
+    border-top: 8px solid rgba(60, 66, 91, 0.6);
+    border-bottom: 8px solid transparent;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+  }
+  .info-box {
+    height: 100%;
+  }
+  .info-item {
+    display: inline-flex;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 8px;
+    color: $font-white;
+  }
+  .item-left {
+    display: inline-block;
+    line-height: 16px;
+    font-size: 14px;
+    width: 84px;
+    margin-right: 8px;
+    text-align: right;
+  }
+  .item-left-b {
+    display: inline-block;
+    line-height: 16px;
+    font-size: 14px;
+    width: 80px;
+    margin-right: 8px;
+    text-align: right;
+  }
+  .item-text {
+    display: inline-block;
+    line-height: 16px;
+    font-size: 14px;
+  }
 }
 </style>

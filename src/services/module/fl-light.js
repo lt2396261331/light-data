@@ -47,10 +47,18 @@ export function getGroupsByIDs() {
   })
 }
 
-// 节约用电情况
+// 节约用电情况-年数据
 export function getYearMeterData() {
   return hxRequest.get({
     url: '/fl/api/HX/GetYearMeterData?type=-1&countryId=1&sensorID=-1&month=undefined'
+  })
+}
+// 月数据
+export function getMonthMeterData(month = '2023-1') {
+  return hxRequest.get({
+    url:
+      '/fl/api/HX/GetMonthMeterData?type=-1&countryId=1&sensorID=-1&month=' +
+      month
   })
 }
 
@@ -74,5 +82,21 @@ export function SetTempTask(
       floorID,
       deviceAreaID
     }
+  })
+}
+
+// 终端计数
+export const getTotalTerminalCount = (countryId = 1) => {
+  return hxRequest.get({
+    url: '/fl/api/HX/GetTotalInfoByCountryID?countryId=' + countryId
+  })
+}
+
+
+// 配置灯位置
+export const setLightPosition = params => {
+  return hxRequest.post({
+    url: '/fl/api/HX/SetSensorLocationByNodeIEEEAddress',
+    params
   })
 }

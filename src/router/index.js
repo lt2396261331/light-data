@@ -29,6 +29,7 @@ const router = createRouter({
     },
     {
       path: '/deploy-light',
+      name: 'deploy',
       component: () => import('@/views/light/deploy.vue')
     }
   ]

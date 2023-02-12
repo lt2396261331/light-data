@@ -64,7 +64,7 @@
         <el-table-column property="brightness" label="亮度" />
         <el-table-column property="motionBr" label="有人亮度" />
         <el-table-column property="noMotionBr" label="无人亮度" />
-        <el-table-column property="group" label="延迟时间" />
+        <el-table-column property="delayTime" label="延迟时间" />
         <el-table-column property="isUserControl" label="当前执行" />
         <el-table-column property="status" label="状态" />
         <el-table-column property="x" label="灯坐标x" />
@@ -135,13 +135,23 @@ const statusValue = ref('')
 const localRef = ref()
 const focusLevel = ref(1)
 const handleLockClick = val => {
-  console.log(val)
+  // console.log(val)
+  // 设置楼层
+  focusLevel.value = val.group
   localRef.value.isShowDialog = true
+  localRef.value.showLightPosition(val)
 }
 const router = useRouter()
 const handleDeployClick = val => {
   console.log(val)
-  router.push('/deploy-light')
+  router.push({
+    path: '/deploy-light',
+    query: {
+      nodeIEEEAddress: val.nodeIEEEAddress,
+      group: val.groupIDNumber,
+      floor: val.groupID
+    }
+  })
 }
 
 const handleSelectionChange = val => {
