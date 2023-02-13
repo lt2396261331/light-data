@@ -24,28 +24,28 @@
         </div>
         <div class="info">
           <div class="item">
-            <span class="circle">减排SO2</span>
-            <span>25689kg</span>
+            <span class="circle">减排CO2</span>
+            <span>{{ emissionInfo.CO2 }}kg</span>
           </div>
           <div class="item">
             <span class="circle">减排SO2</span>
-            <span>25689kg</span>
+            <span>{{ emissionInfo.SO2 }}kg</span>
           </div>
           <div class="item">
-            <span class="circle">减排SO2</span>
-            <span>25689kg</span>
+            <span class="circle">减排碳粉尘</span>
+            <span>{{ emissionInfo.CarbonDust }}kg</span>
           </div>
           <div class="item">
-            <span class="circle">减排SO2</span>
-            <span>25689kg</span>
+            <span class="circle">节约标准煤</span>
+            <span>{{ emissionInfo.Coal }}kg</span>
           </div>
           <div class="item">
-            <span class="circle">减排SO2</span>
-            <span>25689kg</span>
+            <span class="circle">减排氮氧化合物</span>
+            <span>{{ emissionInfo.NO }}kg</span>
           </div>
           <div class="item">
-            <span class="circle">减排SO2</span>
-            <span>25689kg</span>
+            <span class="circle">约等于植树</span>
+            <span>{{ emissionInfo.Tree }}棵</span>
           </div>
         </div>
       </div>
@@ -55,6 +55,14 @@
 
 <script setup>
 import Card from '@/components/card/index.vue'
+
+
+defineProps({
+  emissionInfo: {
+    type: Object,
+    default: () => ({})
+  }
+})
 </script>
 
 <style scoped lang="scss">

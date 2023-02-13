@@ -6,7 +6,7 @@
     </div>
     <div class="p-ab-center map-container" ref="mapRef"></div>
     <div class="left">
-      <save-electricity />
+      <save-electricity :emission-info="emissionTotalInfo" />
       <month-electricity :electricity-info="yearMeterData" />
       <light-sum :every-light-info="lightSum" />
     </div>
@@ -99,13 +99,15 @@ const lightStore = useLightStore()
 lightStore.fetchYearMeterData()
 lightStore.fetchMonthMeterData()
 lightStore.fetchTerminalData()
+lightStore.fetchEmissionTotalInfo()
 const {
   countryInfo,
   groupList,
   lightAllList,
   yearMeterData,
   monthMeterData,
-  terminalInfo
+  terminalInfo,
+  emissionTotalInfo
 } = storeToRefs(lightStore)
 
 const areaStore = useAreaStore()
@@ -273,7 +275,7 @@ watch(lightPoints, newValue => {
       content
     })
   }
-  // mapCenter({ x: lightInfo.x, y: lightInfo.y })
+  mapCenter({ x: lightInfo.x, y: lightInfo.y })
 })
 </script>
 

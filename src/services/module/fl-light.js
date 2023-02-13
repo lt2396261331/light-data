@@ -27,7 +27,7 @@ export function getLightListBySearch({
 }
 
 // 获取灯配置表
-export function getLightNodes(){
+export function getLightNodes() {
   return hxRequest.get({
     url: '/fl/api/HX/GetLightNodes'
   })
@@ -92,11 +92,17 @@ export const getTotalTerminalCount = (countryId = 1) => {
   })
 }
 
-
 // 配置灯位置
 export const setLightPosition = params => {
   return hxRequest.post({
     url: '/fl/api/HX/SetSensorLocationByNodeIEEEAddress',
     params
+  })
+}
+
+// 排放数据
+export const getEmissionTotalInfo = () => {
+  return hxRequest.get({
+    url: '/fl/api/HX/GetEmissionTotalInfo?countryID=1'
   })
 }
