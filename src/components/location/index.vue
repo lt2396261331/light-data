@@ -51,7 +51,8 @@ const {
   addImageMarker,
   mapCenter,
   removeAreaCover,
-  removeTextMarker
+  removeTextMarker,
+  removeLightMarker
 } = useFengMap()
 
 const { setAreaDom, setLightInfoDom } = useMapDomMarker()
@@ -98,7 +99,7 @@ const showLightPosition = lightInfo => {
   const imageMarkerInfo = {
     x: lightInfo.x,
     y: lightInfo.y,
-    level: lightInfo.groupID,
+    level: lightInfo.level,
     type: 'light',
     url: getLightUrl(lightInfo.status, lightInfo.brightness)
   }
@@ -108,7 +109,7 @@ const showLightPosition = lightInfo => {
   addModalDomMarker({
     x: lightInfo.x,
     y: lightInfo.y,
-    level: lightInfo.groupID,
+    level: lightInfo.level,
     type: 'light',
     content
   })
@@ -125,6 +126,7 @@ const removeCover = () => {
 const closeModal = () => {
   isShowDialog.value = false
   removeCover()
+  removeLightMarker()
 }
 
 defineExpose({

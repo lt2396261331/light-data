@@ -88,7 +88,6 @@ const useLightStore = defineStore('light', () => {
   const fetchEmissionTotalInfo = async () => {
     const { data } = await getEmissionTotalInfo()
     emissionTotalInfo.value = JSON.parse(data).find(item => item.CountryID === 1)
-    console.log('排放数据', JSON.parse(data))
   }
 
   return {

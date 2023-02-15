@@ -4,6 +4,7 @@
       <div class="group item">
         <span class="title">分组:</span>
         <el-select v-model="selectValue" placeholder="请选择" size="small">
+          <el-option label="全部" value=""></el-option>
           <el-option
             v-for="item in groupList"
             :key="item.deviceAreaID"
@@ -99,14 +100,17 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useRouter } from 'vue-router'
 import useLightStore from '@/stores/lightStore'
 
 import Location from '@/components/location/index.vue'
+import { ElMessage } from 'element-plus'
 
 const lightStore = useLightStore()
+await lightStore.fetchGroupList()
+await lightStore.fetchGetCountryList()
 const { lightListInfo, countryInfo, groupList } = storeToRefs(lightStore)
 
 const inputValue = ref()
@@ -118,8 +122,8 @@ const statusOption = [
     label: '全部'
   },
   {
-    value: '在线',
-    label: '在线'
+    value: '正常',
+    label: '正常'
   },
   {
     value: '离线',
@@ -135,27 +139,41 @@ const statusValue = ref('')
 const localRef = ref()
 const focusLevel = ref(1)
 const handleLockClick = val => {
-  // console.log(val)
+  const groupInfo = groupList.value.find(item => item.deviceAreaID ==  val.groupIDNumber)
+  if (!groupInfo) {
+    ElMessage.error({
+      message: '灯分组所在楼层为空'
+    })
+    return 
+  }
   // 设置楼层
-  focusLevel.value = val.group
+  focusLevel.value = groupInfo.floorID
+  const lightInfo = { ...val, level: groupInfo.floorID }
   localRef.value.isShowDialog = true
-  localRef.value.showLightPosition(val)
+  localRef.value.showLightPosition(lightInfo)
 }
+
+
 const router = useRouter()
 const handleDeployClick = val => {
-  console.log(val)
+  const groupInfo = groupList.value.find(item => item.deviceAreaID ==  val.groupIDNumber)
+  if (!groupInfo) {
+    ElMessage.error({
+      message: '灯分组所在楼层为空'
+    })
+    return 
+  }
   router.push({
     path: '/deploy-light',
     query: {
       nodeIEEEAddress: val.nodeIEEEAddress,
       group: val.groupIDNumber,
-      floor: val.groupID
+      floor: groupInfo.floorID
     }
   })
 }
 
 const handleSelectionChange = val => {
-  console.log('handleSelectionChange', val)
 }
 // 分页参数
 const pageSize = ref(10)
@@ -173,7 +191,7 @@ const getData = () => {
   }
   lightStore.fetchLightListBySearch(params)
 }
-
+if (!countryInfo.value) await lightStore.fetchGetCountryList()
 getData()
 
 const handleSizeChange = val => {

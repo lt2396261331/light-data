@@ -100,6 +100,9 @@ lightStore.fetchYearMeterData()
 lightStore.fetchMonthMeterData()
 lightStore.fetchTerminalData()
 lightStore.fetchEmissionTotalInfo()
+await lightStore.fetchGroupList()
+await lightStore.fetchGetCountryList()
+
 const {
   countryInfo,
   groupList,
@@ -129,9 +132,9 @@ const lightSum = computed(() => {
 
 // 终端
 const normalLight = computed(
-  () => lightAllList.value.filter(arr => arr.status === '在线').length
+  () => lightAllList.value.filter(arr => arr.status === '正常').length
 )
-const errorLight = computed(() => lightAllList.value.length - normalLight.value)
+const errorLight = computed(() => lightAllList.value.filter(arr => arr.status === '故障').length)
 
 onMounted(async () => {
   loadMap(mapRef.value)
@@ -154,10 +157,14 @@ watchEffect(async () => {
       setCickPolygonStatus(true)
       // 显示灯位置
       for (const light of lightAllList.value) {
+        const groupInfo = groupList.value.find(item => item.deviceAreaID ==  light.groupIDNumber)
+        if (!groupInfo) {
+          return
+        }
         const imageMarkerInfo = {
           x: light.x,
           y: light.y,
-          level: 1,
+          level: groupInfo.floorID,
           type: 'light',
           id: 'aaa-bbb-ccc',
           url: getLightUrl(light.status, light.brightness)
@@ -173,7 +180,6 @@ const setAllLightTempTask = async type => {
   // 全亮
   if (type === 'light') {
     const res = await SetTempTask(countryInfo.countryID, 10, 10)
-    console.log(res)
     ElMessage({
       message: res.message
     })
@@ -181,7 +187,6 @@ const setAllLightTempTask = async type => {
   }
   // 恢复
   const res = await SetTempTask(countryInfo.countryID, -2, -2)
-  console.log(res)
   ElMessage({
     message: res.message
   })
@@ -221,9 +226,7 @@ const showGroupAllBright = async (group, type) => {
     setTimeout(() => {
       tip.value = false
     }, 1000)
-    console.log(res)
   } catch (error) {
-    console.log(error)
   }
 }
 
@@ -263,9 +266,9 @@ watch(lightPoints, newValue => {
     item =>
       item.x == clickLight.x &&
       item.y == clickLight.y &&
-      item.groupID == clickLight.level
+      item.groupID == groupList.value.find(iten => iten.deviceAreaID ==  item.groupIDNumber).floorID
   )
-  console.log(lightInfo)
+  console.log('lingtInfo', lightInfo)
   if (lightInfo) {
     const content = setLightInfoDom(lightInfo)
     addModalDomMarker({

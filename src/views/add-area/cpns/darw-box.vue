@@ -161,6 +161,7 @@ areaStore.fetchAllAreaList()
 
 // 获取分组信息
 const lightStore = useLightStore()
+await lightStore.fetchGroupList()
 const { groupList } = storeToRefs(lightStore)
 
 const { allAreaList } = storeToRefs(areaStore)
@@ -351,7 +352,6 @@ const saveCover = async () => {
     areaGroup: groupValue.value.join(','),
     areas: areas
   }
-  console.log('info', info)
   if (updateAreaId) info.id = updateAreaId
   emits('saveCoverInfo', info)
 }

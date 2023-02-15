@@ -190,7 +190,6 @@ export default function useFengMap() {
     })
     // 地图楼层切换事件
     map.on('levelChanged', function (event) {
-      console.log('levelChanged')
       level.value = event.level
       let floor = map.getFloor(map.getLevel())
       let bound = floor.getBound()
@@ -361,6 +360,11 @@ export default function useFengMap() {
   //移除坐标点
   const removeMarker = index => {
     removePointMarker('markList', index)
+  }
+  // 移除灯图片定位点
+  const removeLightMarker = () => {
+    lightMarkerList.value.forEach(e => e.remove())
+    lightMarkerList.value = []
   }
   //移除图片定位点
   const removeImageMarker = index => {
@@ -762,7 +766,6 @@ export default function useFengMap() {
     let mapFloor = store.state.map.mapFloor
     const { fengx, fengy, originx, originy, cadToFengx, cadToFengy } =
       mapFloor[floorId]
-    console.log('参数', mapFloor[floorId])
     let svgX = (fengX - fengx + originx * cadToFengx) / cadToFengx
     let svgY = (fengy + originy * cadToFengy - fengY) / cadToFengy
     let svgR = radius ? radius / cadToFengx : radius
@@ -1075,6 +1078,7 @@ export default function useFengMap() {
     removeLastMemberMarker,
     removeWarnMarker,
     removeVideoMarker,
+    removeLightMarker,
 
     addDomMarker,
     removeTextDom,

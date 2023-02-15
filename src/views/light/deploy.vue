@@ -11,7 +11,7 @@
 </template>
 
 <script setup>
-import { onMounted, ref, watch } from 'vue'
+import { nextTick, onMounted, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import useFengMap from '@/hooks/useFengMap'
 import { setLightPosition } from '@/services/module/fl-light'
@@ -35,7 +35,6 @@ onMounted(() => {
 })
 
 const fetchAddLight = async lightInfo => {
-  console.log(lightInfo)
   if (addLightRef.value) {
     const params = {
       x: lightInfo.x,
@@ -59,7 +58,7 @@ const fetchAddLight = async lightInfo => {
 
 watch(mapStatus, () => {
   if (mapStatus.value) {
-    setFloor(floor)
+    setFloor(Number(floor))
   }
 })
 
