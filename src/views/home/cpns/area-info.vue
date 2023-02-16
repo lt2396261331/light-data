@@ -81,9 +81,5 @@ const resetAuto = () => {
     top: 4px;
     font-size: 20px;
   }
-
-  .alter {
-    
-  }
 }
 </style>

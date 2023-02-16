@@ -30,6 +30,7 @@
         >全局恢复</el-button
       >
     </div>
+    <el-button type="primary" size="small" class="go-btn" @click="onGoBack">管理后台</el-button>
     <light-info class="home-light-info" />
     <area-info
       class="home-area-info"
@@ -183,14 +184,14 @@ watchEffect(async () => {
 const setAllLightTempTask = async type => {
   // 全亮
   if (type === 'light') {
-    const res = await SetTempTask(countryInfo.countryID, 10, 10)
+    const res = await SetTempTask(countryInfo.value.countryID, 10, 10)
     ElMessage({
       message: res.message
     })
     return
   }
   // 恢复
-  const res = await SetTempTask(countryInfo.countryID, -2, -2)
+  const res = await SetTempTask(countryInfo.value.countryID, -2, -2)
   ElMessage({
     message: res.message
   })
@@ -231,6 +232,12 @@ const showGroupAllBright = async (group, type) => {
       tip.value = false
     }, 1000)
   } catch (error) {}
+}
+
+// 进入后台
+// http://localhost/#/lightControl/dashboard
+const onGoBack = () => {
+  location.assign('http://localhost/#/lightControl/dashboard')
 }
 
 // 监听区域点击
@@ -291,7 +298,7 @@ watch(lightPoints, newValue => {
 })
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss" scoped>                   
 @import '@/assets/scss/variable';
 .home {
   background-color: #0b203d;
@@ -374,6 +381,13 @@ watch(lightPoints, newValue => {
     background-color: rgba(13, 44, 87, 0.5);
     border: 1px solid rgb(39, 93, 113);
     border-radius: 5px;
+  }
+
+  .go-btn {
+    position: fixed;
+    right: 109px;
+    top: 33px;
+    z-index: 999;
   }
 }
 

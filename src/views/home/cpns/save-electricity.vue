@@ -18,7 +18,7 @@
             </div>
             <div>
               <span class="electricity up-down">1203度</span>
-              <span class="circle">年节省用电</span>
+              <span class="circle">预计年节省用电</span>
             </div>
           </div>
         </div>
