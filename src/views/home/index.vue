@@ -134,7 +134,9 @@ const lightSum = computed(() => {
 const normalLight = computed(
   () => lightAllList.value.filter(arr => arr.status === '正常').length
 )
-const errorLight = computed(() => lightAllList.value.filter(arr => arr.status === '故障').length)
+const errorLight = computed(
+  () => lightAllList.value.filter(arr => arr.status === '故障').length
+)
 
 onMounted(async () => {
   loadMap(mapRef.value)
@@ -157,7 +159,9 @@ watchEffect(async () => {
       setCickPolygonStatus(true)
       // 显示灯位置
       for (const light of lightAllList.value) {
-        const groupInfo = groupList.value.find(item => item.deviceAreaID ==  light.groupIDNumber)
+        const groupInfo = groupList.value.find(
+          item => item.deviceAreaID == light.groupIDNumber
+        )
         if (!groupInfo) {
           return
         }
@@ -226,8 +230,7 @@ const showGroupAllBright = async (group, type) => {
     setTimeout(() => {
       tip.value = false
     }, 1000)
-  } catch (error) {
-  }
+  } catch (error) {}
 }
 
 // 监听区域点击
@@ -262,19 +265,25 @@ watch(polygonPoint.value, () => {
 watch(lightPoints, newValue => {
   // removeModalDom()
   const clickLight = newValue.points[newValue.points.length - 1]
-  const lightInfo = lightAllList.value.find(
-    item =>
-      item.x == clickLight.x &&
-      item.y == clickLight.y &&
-      item.groupID == groupList.value.find(iten => iten.deviceAreaID ==  item.groupIDNumber).floorID
-  )
-  console.log('lingtInfo', lightInfo)
+  let groupInfo = {}
+  const lightInfo = lightAllList.value.find(item => {
+    groupInfo = groupList.value.find(
+      iten => iten.deviceAreaID == item.groupIDNumber
+    )
+    if (groupInfo) {
+      return (
+        item.x == clickLight.x &&
+        item.y == clickLight.y &&
+        groupInfo.floorID == clickLight.level
+      )
+    }
+  })
   if (lightInfo) {
     const content = setLightInfoDom(lightInfo)
     addModalDomMarker({
       x: lightInfo.x,
       y: lightInfo.y,
-      level: lightInfo.groupID,
+      level: groupInfo.floorID,
       content
     })
   }
