@@ -5,17 +5,16 @@ export default function useMapDomMarKer() {
               <span class="arrow"></span>
               <div class="info-box">
                   <div class="info-item">
-                      <span class="item-text">区域id: </span>
+                      <span class="item-text">区域id：</span>
                       <span class="item-text">${info.id}</span>
                     </div>
                   <div class="info-item">
-                      <span class="item-text">区域名称: </span>
+                      <span class="item-text">区域名称：</span>
                       <span class="item-text">${info.areaName}</span>
                   </div>
-                  <div class="info-item">
-                      <span class="item-text">包含分组: </span>
-                      <span class="item-text">${info.areaGroup}</span>
-                  </div>
+                  <p class="info-group">
+                    包含分组：${info.areaGroup}
+                  </p>
               </div>
           </div>
           `

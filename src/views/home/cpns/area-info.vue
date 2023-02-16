@@ -7,7 +7,7 @@
         <el-button type="primary" size="small" round @click="resetAuto">恢复自动</el-button>
       </div>
     </div>
-    <div class="group">包含分组：{{ areaInfo.areaGroup }}</div>
+    <p class="group">包含分组：{{ areaInfo.areaGroup }}</p>
     <div class="close" @click="close"><el-icon><CircleCloseFilled /></el-icon></div>
     <div class="alter p-ab-center" v-if="message">
       <el-button round size="small" disabled>操作成功</el-button>
@@ -50,13 +50,14 @@ const resetAuto = () => {
 .area-info {
   position: relative;
 
-  height: 70px;
+  
   width: 30%;
   font-size: 14px;
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
   padding: 0 15px;
+  padding-top: 12px;
 
   .name {
     display: flex;
@@ -68,6 +69,10 @@ const resetAuto = () => {
       display: inline-block;
       margin-left: 100px;
     }
+  }
+
+  .group {
+    word-break: break-all;
   }
 
   .close {

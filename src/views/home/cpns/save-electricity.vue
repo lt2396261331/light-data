@@ -24,27 +24,27 @@
         </div>
         <div class="info">
           <div class="item">
-            <span class="circle">减排CO2</span>
+            <span class="circle name">减排CO2</span>
             <span>{{ emissionInfo.CO2 }}kg</span>
           </div>
           <div class="item">
-            <span class="circle">减排SO2</span>
+            <span class="circle name">减排SO2</span>
             <span>{{ emissionInfo.SO2 }}kg</span>
           </div>
           <div class="item">
-            <span class="circle">减排碳粉尘</span>
+            <span class="circle name">减排碳粉尘</span>
             <span>{{ emissionInfo.CarbonDust }}kg</span>
           </div>
           <div class="item">
-            <span class="circle">节约标准煤</span>
+            <span class="circle name">节约标准煤</span>
             <span>{{ emissionInfo.Coal }}kg</span>
           </div>
           <div class="item">
-            <span class="circle">减排氮氧化合物</span>
+            <span class="circle name">减排氮氧化合物</span>
             <span>{{ emissionInfo.NO }}kg</span>
           </div>
           <div class="item">
-            <span class="circle">约等于植树</span>
+            <span class="circle name">约等于植树</span>
             <span>{{ emissionInfo.Tree }}棵</span>
           </div>
         </div>
@@ -104,7 +104,12 @@ defineProps({
       width: 50%;
       text-align: center;
       display: flex;
-      justify-content: space-evenly;
+      padding-left: 24px;
+      box-sizing: border-box;
+      .name {
+        width: 120px;
+        text-align: left;
+      }
     }
   }
 }

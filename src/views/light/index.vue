@@ -38,12 +38,12 @@
           >查询</el-button
         >
       </div>
-      <div class="action item">
+      <!-- <div class="action item">
         <el-button class="btn" size="small" plain type="primary"
           >批量导入</el-button
         >
         <a href="#" class="upload">下载excel模板</a>
-      </div>
+      </div> -->
     </div>
     <div class="content">
       <el-table
@@ -215,7 +215,7 @@ const btnSearchClick = () => {
 
   .search-box {
     display: flex;
-    /* width: 55vw; */
+    width: 45vw;
 
     .input {
       .btn {

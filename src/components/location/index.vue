@@ -200,7 +200,6 @@ defineExpose({
   bottom: 40px;
   display: inline-flex;
   width: 200px;
-  height: 120px;
   padding: 12px;
   box-sizing: border-box;
   align-items: center;
@@ -231,8 +230,14 @@ defineExpose({
   .item-text {
     display: inline-block;
     line-height: 16px;
-    font-size: 12px;
+    font-size: 14px;
     color: $font-white;
+  }
+  .info-group {
+    font-size: 14px;
+    word-break: break-all;
+    margin: 0;
+    color: #fff;
   }
 }
 ::v-deep(.warn-dom) {
