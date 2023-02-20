@@ -237,7 +237,7 @@ const showGroupAllBright = async (group, type) => {
 // 进入后台
 // http://localhost/#/lightControl/dashboard
 const onGoBack = () => {
-  location.assign('http://localhost/#/lightControl/dashboard')
+  location.assign('http://172.16.70.149/#/lightControl/dashboard')
 }
 
 // 监听区域点击

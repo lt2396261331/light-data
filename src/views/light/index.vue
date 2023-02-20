@@ -66,7 +66,9 @@
         <el-table-column property="motionBr" label="有人亮度" />
         <el-table-column property="noMotionBr" label="无人亮度" />
         <el-table-column property="delayTime" label="延迟时间" />
-        <el-table-column property="isUserControl" label="当前执行" />
+        <el-table-column property="isUserControl" label="当前执行">
+          <template #default>自动亮灯模式</template>
+        </el-table-column>
         <el-table-column property="status" label="状态" />
         <el-table-column property="x" label="灯坐标x" />
         <el-table-column property="y" label="灯坐标y" />

@@ -44,7 +44,7 @@ export default function useMapDomMarKer() {
                   </div>
                   <div class="info-item">
                       <span class="item-left">当前运行: </span>
-                      <span class="item-text">${lightInfo.isUserControl}</span>
+                      <span class="item-text">自动亮灯模式</span>
                   </div>
                   <div class="info-item">
                       <span class="item-left">状态: </span>
