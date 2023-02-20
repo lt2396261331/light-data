@@ -35,7 +35,7 @@
     <area-info
       class="home-area-info"
       :area-info="clickAreaInfo"
-      :message="tip"
+      :message="showTip"
       v-if="showAreaInfoStatus"
       @close="showAreaInfoStatus = false"
       @all-bright="showGroupAllBright"
@@ -197,7 +197,7 @@ const setAllLightTempTask = async type => {
   })
 }
 
-const tip = ref(false)
+const showTip = ref(false)
 // 多组全亮/回复
 const showGroupAllBright = async (group, type) => {
   const groups = group.split(',')
@@ -227,9 +227,9 @@ const showGroupAllBright = async (group, type) => {
   })
   try {
     const res = await Promise.all(groupInfo)
-    tip.value = true
+    showTip.value = true
     setTimeout(() => {
-      tip.value = false
+      showTip.value = false
     }, 1000)
   } catch (error) {}
 }

@@ -62,7 +62,6 @@
         />
         <el-table-column property="nodeName" label="灯名称" width="200" />
         <el-table-column property="groupIDNumber" label="分组一" />
-        <el-table-column property="brightness" label="亮度" />
         <el-table-column property="motionBr" label="有人亮度" />
         <el-table-column property="noMotionBr" label="无人亮度" />
         <el-table-column property="delayTime" label="延迟时间" />

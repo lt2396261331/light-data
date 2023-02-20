@@ -14,11 +14,11 @@
           <div class="num item">
             <div>
               <span class="electricity up-down">8966度</span>
-              <span class="circle">本年用电</span>
+              <span class="circle">本年累计用电</span>
             </div>
             <div>
               <span class="electricity up-down">1203度</span>
-              <span class="circle">预计年节省用电</span>
+              <span class="circle">本年累计节省用电</span>
             </div>
           </div>
         </div>

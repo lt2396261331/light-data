@@ -22,6 +22,7 @@ export default function useMapDomMarKer() {
 
   // 设置灯信息dom
   const setLightInfoDom = lightInfo => {
+    console.log(lightInfo)
     return `
           <div class="warn-dom">
               <span class="arrow"></span>
@@ -39,8 +40,12 @@ export default function useMapDomMarKer() {
                       <span class="item-text">${lightInfo.groupIDNumber}</span>
                   </div>
                   <div class="info-item">
-                      <span class="item-left">亮度: </span>
-                      <span class="item-text">${lightInfo.brightness}</span>
+                      <span class="item-left">有人亮度: </span>
+                      <span class="item-text">${lightInfo.motionBr}</span>
+                  </div>
+                  <div class="info-item">
+                      <span class="item-left">无人亮度: </span>
+                      <span class="item-text">${lightInfo.noMotionBr}</span>
                   </div>
                   <div class="info-item">
                       <span class="item-left">当前运行: </span>
