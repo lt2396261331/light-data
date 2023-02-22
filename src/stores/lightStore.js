@@ -8,7 +8,8 @@ import {
   getYearMeterData,
   getMonthMeterData,
   getTotalTerminalCount,
-  getEmissionTotalInfo
+  getEmissionTotalInfo,
+  getElectricitys
 } from '@/services/module/fl-light'
 import { COUNTRY_NAME } from '@/constants'
 
@@ -87,7 +88,14 @@ const useLightStore = defineStore('light', () => {
   const emissionTotalInfo = ref({})
   const fetchEmissionTotalInfo = async () => {
     const { data } = await getEmissionTotalInfo()
-    emissionTotalInfo.value = JSON.parse(data).find(item => item.CountryID === 1)
+    emissionTotalInfo.value = data
+  }
+
+  // 获取节电数据
+  const saveElectricitys = ref()
+  const fetchGetElectricitys = async () => {
+    const { data } = await getElectricitys()
+    saveElectricitys.value = data
   }
 
   return {
@@ -111,7 +119,9 @@ const useLightStore = defineStore('light', () => {
     fetchTerminalData,
 
     emissionTotalInfo,
-    fetchEmissionTotalInfo
+    fetchEmissionTotalInfo,
+    saveElectricitys,
+    fetchGetElectricitys
   }
 })
 

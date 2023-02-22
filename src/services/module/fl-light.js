@@ -103,6 +103,13 @@ export const setLightPosition = params => {
 // 排放数据
 export const getEmissionTotalInfo = () => {
   return hxRequest.get({
-    url: '/fl/api/HX/GetEmissionTotalInfo?countryID=1'
+    url: '/fl/api/HX/GetEmissionReductions'
+  })
+}
+
+// 获取节电统计
+export const getElectricitys = () => {
+  return hxRequest.get({
+    url: '/fl/api/HX/Getelectricitys'
   })
 }

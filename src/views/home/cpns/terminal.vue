@@ -25,11 +25,11 @@
         <div class="info">
           <div class="item">
             <span class="circle name">灯节点</span>
-            <span>{{ terminalInfo.lightCount }}个</span>
+            <span>{{ terminalInfo.lightcount }}个</span>
           </div>
           <div class="item">
             <span class="circle name">光 敏</span>
-            <span>{{ terminalInfo.photosensitiveCount }}个</span>
+            <span>{{ terminalInfo.photosensitive }}个</span>
           </div>
           <div class="item">
             <span class="circle name">电 表</span>
@@ -37,7 +37,7 @@
           </div>
           <div class="item">
             <span class="circle name">网 关</span>
-            <span>{{ terminalInfo.gatewayCount }}个</span>
+            <span>{{ terminalInfo.chanelCount }}个</span>
           </div>
         </div>
       </div>

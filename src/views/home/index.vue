@@ -6,7 +6,10 @@
     </div>
     <div class="p-ab-center map-container" ref="mapRef"></div>
     <div class="left">
-      <save-electricity :emission-info="emissionTotalInfo" />
+      <save-electricity
+        :emission-info="emissionTotalInfo"
+        :save-electricitys="saveElectricitys"
+      />
       <month-electricity :electricity-info="yearMeterData" />
       <light-sum :every-light-info="lightSum" />
     </div>
@@ -30,7 +33,9 @@
         >全局恢复</el-button
       >
     </div>
-    <el-button type="primary" size="small" class="go-btn" @click="onGoBack">管理后台</el-button>
+    <el-button type="primary" size="small" class="go-btn" @click="onGoBack"
+      >管理后台</el-button
+    >
     <light-info class="home-light-info" />
     <area-info
       class="home-area-info"
@@ -85,6 +90,7 @@ const {
   lightPoints,
   addModalDomMarker,
   removeModalDom,
+  removeLightMarker,
   mapCenter
 } = useFengmap()
 
@@ -101,8 +107,19 @@ lightStore.fetchYearMeterData()
 lightStore.fetchMonthMeterData()
 lightStore.fetchTerminalData()
 lightStore.fetchEmissionTotalInfo()
+lightStore.fetchGetElectricitys()
 await lightStore.fetchGroupList()
 await lightStore.fetchGetCountryList()
+
+setInterval(() => {
+  lightStore.fetchYearMeterData()
+  lightStore.fetchMonthMeterData()
+  lightStore.fetchTerminalData()
+  lightStore.fetchEmissionTotalInfo()
+  lightStore.fetchGetElectricitys()
+  lightStore.fetchGroupList()
+  lightStore.fetchGetCountryList()
+}, 1000 * 60 * 60)
 
 const {
   countryInfo,
@@ -111,7 +128,8 @@ const {
   yearMeterData,
   monthMeterData,
   terminalInfo,
-  emissionTotalInfo
+  emissionTotalInfo,
+  saveElectricitys
 } = storeToRefs(lightStore)
 
 const areaStore = useAreaStore()
@@ -144,7 +162,7 @@ onMounted(async () => {
 })
 
 // 地图加成完成
-watchEffect(async () => {
+watch(mapStatus, async () => {
   // console.log('地图加成完成', mapState.value)
   if (mapStatus.value) {
     await areaStore.fetchAllAreaList()
@@ -158,43 +176,48 @@ watchEffect(async () => {
         })
       }
       setCickPolygonStatus(true)
-      // 显示灯位置
-      for (const light of lightAllList.value) {
-        const groupInfo = groupList.value.find(
-          item => item.deviceAreaID == light.groupIDNumber
-        )
-        if (!groupInfo) {
-          return
-        }
-        const imageMarkerInfo = {
-          x: light.x,
-          y: light.y,
-          level: groupInfo.floorID,
-          type: 'light',
-          id: 'aaa-bbb-ccc',
-          url: getLightUrl(light.status, light.brightness)
-        }
-        addImageMarker(imageMarkerInfo)
-      }
     })
+  }
+})
+
+watch(lightAllList, newValue => {
+  if (mapStatus.value) {
+    removeLightMarker()
+    // 显示灯位置
+    for (const light of lightAllList.value) {
+      const groupInfo = groupList.value.find(
+        item => item.deviceAreaID == light.groupIDNumber
+      )
+      if (!groupInfo) {
+        return
+      }
+      const imageMarkerInfo = {
+        x: light.x,
+        y: light.y,
+        level: groupInfo.floorID,
+        type: 'light',
+        id: 'aaa-bbb-ccc',
+        url: getLightUrl(light.status, light.brightness)
+      }
+      addImageMarker(imageMarkerInfo)
+    }
   }
 })
 
 // 全局全亮/恢复
 const setAllLightTempTask = async type => {
   // 全亮
+  let res = {}
   if (type === 'light') {
-    const res = await SetTempTask(countryInfo.value.countryID, 10, 10)
-    ElMessage({
-      message: res.message
-    })
-    return
+    res = await SetTempTask(countryInfo.value.countryID, 10, 10)
+  } else {
+    // 恢复
+    res = await SetTempTask(countryInfo.value.countryID, -2, -2)
   }
-  // 恢复
-  const res = await SetTempTask(countryInfo.value.countryID, -2, -2)
-  ElMessage({
+  ElMessage.success({
     message: res.message
   })
+  lightStore.fetchLightList()
 }
 
 const showTip = ref(false)
@@ -231,6 +254,7 @@ const showGroupAllBright = async (group, type) => {
     setTimeout(() => {
       showTip.value = false
     }, 1000)
+    lightStore.fetchLightList()
   } catch (error) {}
 }
 
@@ -298,7 +322,7 @@ watch(lightPoints, newValue => {
 })
 </script>
 
-<style lang="scss" scoped>                   
+<style lang="scss" scoped>
 @import '@/assets/scss/variable';
 .home {
   background-color: #0b203d;
