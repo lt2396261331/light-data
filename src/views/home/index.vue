@@ -23,15 +23,32 @@
       <day-save-eletricity :meter-info="monthMeterData" />
     </div>
     <div class="action">
-      <el-button
-        type="primary"
-        size="small"
-        @click="setAllLightTempTask('light')"
-        >全局全亮</el-button
+      <el-popconfirm
+        width="420"
+        confirm-button-text="确定"
+        cancel-button-text="取消"
+        :icon="InfoFilled"
+        icon-color="#626AEF"
+        title="该操作需要轮询所有分组信息，分组数量较多可能导致耗时较长（约10分钟）。是否确定继续执行？"
+        @confirm="setAllLightTempTask('light')"
       >
-      <el-button type="primary" size="small" @click="setAllLightTempTask"
-        >全局恢复</el-button
+        <template #reference>
+          <el-button type="primary" size="small">全局全亮</el-button>
+        </template>
+      </el-popconfirm>
+      <el-popconfirm
+        width="420"
+        confirm-button-text="确定"
+        cancel-button-text="取消"
+        :icon="InfoFilled"
+        icon-color="#626AEF"
+        title="该操作需要轮询所有分组信息，分组数量较多可能导致耗时较长（约10分钟）。是否确定继续执行？"
+        @confirm="setAllLightTempTask"
       >
+        <template #reference>
+          <el-button type="primary" size="small">全局恢复</el-button>
+        </template>
+      </el-popconfirm>
     </div>
     <el-button type="primary" size="small" class="go-btn" @click="onGoBack"
       >管理后台</el-button
@@ -74,6 +91,7 @@ import daySaveEletricity from '@/views/home/cpns/day-save-eletricity.vue'
 import LightInfo from './cpns/light-info.vue'
 import AreaInfo from './cpns/area-info.vue'
 import { ElMessage } from 'element-plus'
+import { InfoFilled } from '@element-plus/icons-vue'
 
 const mapRef = ref()
 const {
