@@ -13,11 +13,21 @@
           </div>
           <div class="num item">
             <div>
-              <span class="electricity up-down">{{ saveElectricitys.totalElectricity }}度</span>
+              <span class="electricity up-down">
+                {{ 
+                  saveElectricitys.totalElectricity && 
+                  Number(saveElectricitys.totalElectricity).toFixed(2) 
+                }}度
+              </span>
               <span class="circle">本年累计用电</span>
             </div>
             <div>
-              <span class="electricity up-down">{{ saveElectricitys.saveElectricity }}度</span>
+              <span class="electricity up-down">
+                {{ 
+                  saveElectricitys.saveElectricity &&
+                  Number(saveElectricitys.saveElectricity).toFixed(2)
+                }}度
+              </span>
               <span class="circle">本年累计节省用电</span>
             </div>
           </div>

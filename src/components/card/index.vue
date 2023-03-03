@@ -36,11 +36,13 @@ const props = defineProps({
     font-size: 12px;
     display: flex;
     flex-direction: column;
+    box-sizing: border-box;
     .title {
       height: 18px;
       line-height: 18px;
       padding: 12px 0;
       font-size: 16px;
+      /* margin: 10px 0; */
     }
 
     .content {

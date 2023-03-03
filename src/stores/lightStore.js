@@ -92,7 +92,7 @@ const useLightStore = defineStore('light', () => {
   }
 
   // 获取节电数据
-  const saveElectricitys = ref()
+  const saveElectricitys = ref({})
   const fetchGetElectricitys = async () => {
     const { data } = await getElectricitys()
     saveElectricitys.value = data

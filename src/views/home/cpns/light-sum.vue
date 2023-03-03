@@ -1,63 +1,59 @@
 <template>
   <div class="light-sum">
-    <card title="各亮度灯数量">
-      <echarts :option="option"></echarts>
+    <card title="灯区域划分详情">
+      <div class="title">
+        <span>楼层</span>
+        <span>区域名称</span>
+        <span>查看</span>
+      </div>
+      <el-scrollbar  class="list" height="163px" >
+        <template v-for="item of allAreaList" :key="item.id">
+          <div class="item" :class="{'list-active': item.id === areaDetailInfo.id}">
+            <span>F{{ item.floorId }}</span>
+            <span>{{ item.areaName }}</span>
+            <span class="thi iconfont icon-chakanyanjingshishifenxi2" @click="showAreaDetail(item)"></span>
+          </div>
+        </template>
+      </el-scrollbar>
     </card>
   </div>
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import useAreaStore from '@/stores/areaStore'
+import { storeToRefs } from 'pinia';
 
-import Echarts from '@/components/echarts/index.vue'
-import Card from '@/components/card/index.vue'
+const emits = defineEmits(['clickShowArea'])
 
-const props = defineProps({
-  everyLightInfo: {
-    type: Object,
-    default: () => ({})
-  }
-})
+const areaStore = useAreaStore()
+const { allAreaList, areaDetailInfo } = storeToRefs(areaStore)
 
-const option = computed(() => ({
-  title: {},
-  tooltip: {
-    trigger: 'item'
-  },
-  legend: {
-    textStyle: {
-      color: '#fff'
-    }
-  },
-  textStyle: {
-    color: '#fff'
-  },
-  series: [
-    {
-      type: 'pie',
-      radius: '50%',
-      data: [
-        { value: Number(props.everyLightInfo.light0), name: '0%' },
-        { value: Number(props.everyLightInfo.light1), name: '10%' },
-        { value: Number(props.everyLightInfo.light8), name: '80%' },
-        { value: Number(props.everyLightInfo.light10), name: '100%' }
-      ],
-      itemStyle: {
-        color: function (colors) {
-          var colorList = ['#D7C6B3', '#F9C78B', '#F5A544', '#F98A05']
-          return colorList[colors.dataIndex]
-        }
-      },
-      emphasis: {
-        itemStyle: {
-          shadowBlur: 10,
-          shadowOffsetX: 0,
-          shadowColor: 'rgba(0, 0, 0, 0.5)'
-        }
-      }
-    }
-  ]
-}))
+const showAreaDetail = item => {
+  emits('clickShowArea', item)
+}
+
 </script>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.item {
+  display: flex;
+  font-size: 14px;
+  padding: 8px 0;
+  box-sizing: border-box;
+  justify-content: space-around;
+  .thi {
+    cursor: pointer;
+  }
+}
+
+.title {
+  display: flex;
+  font-size: 14px;
+  justify-content: space-around;
+  margin: 12px 0;
+}
+
+.list-active .thi {
+  color: #2d8cf0 !important;
+}
+</style>

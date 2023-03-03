@@ -11,7 +11,7 @@
         :save-electricitys="saveElectricitys"
       />
       <month-electricity :electricity-info="yearMeterData" />
-      <light-sum :every-light-info="lightSum" />
+      <light-sum @clickShowArea="showAreaInfo" />
     </div>
     <div class="right">
       <terminal
@@ -53,13 +53,12 @@
     <el-button type="primary" size="small" class="go-btn" @click="onGoBack"
       >管理后台</el-button
     >
-    <light-info class="home-light-info" />
     <area-info
       class="home-area-info"
-      :area-info="clickAreaInfo"
+      :area-info="areaDetailInfo"
       :message="showTip"
       v-if="showAreaInfoStatus"
-      @close="showAreaInfoStatus = false"
+      @close="clickCloseAreaInfo"
       @all-bright="showGroupAllBright"
       @reset-auto="showGroupAllBright"
     />
@@ -151,21 +150,8 @@ const {
 } = storeToRefs(lightStore)
 
 const areaStore = useAreaStore()
-const { allAreaList } = storeToRefs(areaStore)
-
-// 各灯数量
-const lightSum = computed(() => {
-  const light10 = lightAllList.value.filter(arr => arr.motionBr === 10).length
-  const light8 = lightAllList.value.filter(arr => arr.motionBr === 8).length
-  const light1 = lightAllList.value.filter(arr => arr.motionBr === 1).length
-  const light0 = lightAllList.value.filter(arr => arr.motionBr === 0).length
-  return {
-    light10,
-    light8,
-    light1,
-    light0
-  }
-})
+const { allAreaList, areaDetailInfo, showAreaInfoStatus } =
+  storeToRefs(areaStore)
 
 // 终端
 const normalLight = computed(
@@ -283,12 +269,10 @@ const onGoBack = () => {
 }
 
 // 监听区域点击
-const clickAreaInfo = ref({})
-const showAreaInfoStatus = ref(false)
 watch(polygonPoint.value, () => {
   const newAreaPonit = polygonPoint.value[polygonPoint.value.length - 1]
   const clickPoint = { x: newAreaPonit.x, y: newAreaPonit.y }
-  clickAreaInfo.value = allAreaList.value.find(area => {
+  areaDetailInfo.value = allAreaList.value.find(area => {
     const areas = area.areas.split(',')
     if (area.floorId == newAreaPonit.level) {
       if (area.areaType == 2) {
@@ -308,8 +292,23 @@ watch(polygonPoint.value, () => {
       }
     }
   })
-  if (clickAreaInfo.value) showAreaInfoStatus.value = true
+  if (areaDetailInfo.value) showAreaInfoStatus.value = true
 })
+// 左侧区域列表选择
+const showAreaInfo = areaInfo => {
+  if (areaInfo.id === areaDetailInfo.value.id) {
+    areaDetailInfo.value = {}
+    showAreaInfoStatus.value = false
+    return
+  }
+  areaDetailInfo.value = areaInfo
+  showAreaInfoStatus.value = true
+}
+// 关闭
+const clickCloseAreaInfo = () => {
+  areaDetailInfo.value = {}
+  showAreaInfoStatus.value = false
+}
 
 watch(lightPoints, newValue => {
   // removeModalDom()

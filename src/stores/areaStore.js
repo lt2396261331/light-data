@@ -31,13 +31,20 @@ const useAreaStore = defineStore('areaStore', () => {
     allAreaList.value = data
   }
 
+  // 查看区域
+  const areaDetailInfo = ref({})
+  const showAreaInfoStatus = ref(false)
+
   return {
     areaList,
     rowCount,
     allAreaList,
     fetchAreaList,
     fetchAreaMsgByfloorId,
-    fetchAllAreaList
+    fetchAllAreaList,
+
+    areaDetailInfo,
+    showAreaInfoStatus
   }
 })
 
