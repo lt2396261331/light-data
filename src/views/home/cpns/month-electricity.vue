@@ -44,7 +44,6 @@ const option = computed(() => ({
   },
   yAxis: {
     type: 'value',
-    boundaryGap: [0, 0.01],
     axisLabel: {
       formatter: '{value} KW'
     },

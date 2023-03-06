@@ -16,7 +16,7 @@
               <span class="electricity up-down">
                 {{ 
                   saveElectricitys.totalElectricity && 
-                  Number(saveElectricitys.totalElectricity).toFixed(2) 
+                  Number(saveElectricitys.totalElectricity).toFixed(1) 
                 }}度
               </span>
               <span class="circle">本年累计用电</span>
@@ -25,7 +25,7 @@
               <span class="electricity up-down">
                 {{ 
                   saveElectricitys.saveElectricity &&
-                  Number(saveElectricitys.saveElectricity).toFixed(2)
+                  Number(saveElectricitys.saveElectricity).toFixed(1)
                 }}度
               </span>
               <span class="circle">本年累计节省用电</span>
@@ -35,27 +35,27 @@
         <div class="info">
           <div class="item">
             <span class="circle name">减排CO2</span>
-            <span>{{ emissionInfo.cO2 }}kg</span>
+            <span>{{ emissionInfo.cO2 && Number(emissionInfo.cO2).toFixed(1) }}kg</span>
           </div>
           <div class="item">
             <span class="circle name">减排SO2</span>
-            <span>{{ emissionInfo.sO2 }}kg</span>
+            <span>{{ emissionInfo.sO2 && Number(emissionInfo.sO2).toFixed(1) }}kg</span>
           </div>
           <div class="item">
             <span class="circle name">减排碳粉尘</span>
-            <span>{{ emissionInfo.carbonDust }}kg</span>
+            <span>{{ emissionInfo.carbonDust && Number(emissionInfo.carbonDust).toFixed(1) }}kg</span>
           </div>
           <div class="item">
             <span class="circle name">节约标准煤</span>
-            <span>{{ emissionInfo.coal }}kg</span>
+            <span>{{ emissionInfo.coal && Number(emissionInfo.coal).toFixed(1) }}kg</span>
           </div>
           <div class="item">
             <span class="circle name">减排氮氧化合物</span>
-            <span>{{ emissionInfo.no }}kg</span>
+            <span>{{ emissionInfo.no && Number(emissionInfo.no).toFixed(1) }}kg</span>
           </div>
           <div class="item">
             <span class="circle name">约等于植树</span>
-            <span>{{ emissionInfo.tree }}棵</span>
+            <span>{{ emissionInfo.tree && Number(emissionInfo.tree).toFixed(1) }}棵</span>
           </div>
         </div>
       </div>

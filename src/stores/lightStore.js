@@ -1,5 +1,6 @@
 import { ref, reactive } from 'vue'
 import { defineStore } from 'pinia'
+import dayjs from 'dayjs'
 import {
   getLayers,
   getGroupsByIDs,
@@ -71,10 +72,11 @@ const useLightStore = defineStore('light', () => {
 
   // 电表月数据
   const fetchMonthMeterData = async () => {
-    const { data } = await getMonthMeterData()
+    const date = dayjs().format('YYYY-MM')
+    const { data } = await getMonthMeterData(date)
     monthMeterData.dayList = data.dayList
-    monthMeterData.thisMonth = data.thisMonth
-    monthMeterData.originalEnergyList = data.originalEnergyList
+    monthMeterData.thisMonth = data.thisMonth.map(item => Number(item).toFixed(1))
+    monthMeterData.originalEnergyList = data.originalEnergyList.map(item => Number(item).toFixed(1))
   }
 
   // 获取终端数据
