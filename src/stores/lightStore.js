@@ -60,7 +60,7 @@ const useLightStore = defineStore('light', () => {
   const monthMeterData = reactive({
     dayList: [],
     thisMonth: [],
-    originalEnergyList: []
+    saveEnergyList: []
   })
   // 获取电表年数据
   const fetchYearMeterData = async () => {
@@ -76,7 +76,10 @@ const useLightStore = defineStore('light', () => {
     const { data } = await getMonthMeterData(date)
     monthMeterData.dayList = data.dayList
     monthMeterData.thisMonth = data.thisMonth.map(item => Number(item).toFixed(1))
-    monthMeterData.originalEnergyList = data.originalEnergyList.map(item => Number(item).toFixed(1))
+    const saveEnergyList = data.originalEnergyList.map(
+      (item, index) => Number(item).toFixed(1) - monthMeterData.thisMonth[index]
+    )
+    monthMeterData.saveEnergyList = saveEnergyList
   }
 
   // 获取终端数据

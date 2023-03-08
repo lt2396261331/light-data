@@ -41,7 +41,7 @@ const option = computed(() => ({
   },
   series: [
     {
-      data: props.meterInfo.originalEnergyList,
+      data: props.meterInfo.saveEnergyList,
       type: 'line',
       areaStyle: {}
     }

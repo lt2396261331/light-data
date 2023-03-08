@@ -268,16 +268,8 @@ export function getOneColor() {
 
 // 获取灯imageMaker的url
 export function getLightUrl(status, brightness) {
-  if (status === '正常') {
-    if (brightness == 0) {
-      return './mapImgs/light0.png'
-    } else if (brightness == 1) {
-      return './mapImgs/light10.png'
-    } else if (brightness == 8) {
-      return './mapImgs/light80.png'
-    } else {
-      return './mapImgs/light100.png'
-    }
+  if (status == '正常') {
+    return './mapImgs/light100.png'
   }
   return './mapImgs/light-bad.png'
 }
