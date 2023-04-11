@@ -15,8 +15,9 @@
     </div>
     <div class="right">
       <terminal
-        :success-light="normalLight"
+        :success-light="onlineLight"
         :error-light="errorLight"
+        :normal-light="normalLight"
         :terminal-info="terminalInfo"
       />
       <day-eletricity :meter-info="monthMeterData" />
@@ -154,9 +155,15 @@ const { allAreaList, areaDetailInfo, showAreaInfoStatus } =
   storeToRefs(areaStore)
 
 // 终端
-const normalLight = computed(
-  () => lightAllList.value.filter(arr => arr.status === '正常').length
+// 正常运行灯
+const onlineLight = computed(
+  () => lightAllList.value.filter(arr => arr.status === '在线').length
 )
+// 离线灯
+const normalLight = computed(
+  () => lightAllList.value.filter(arr => arr.status === '正常' || arr.status === '离线').length
+)
+// 故障灯
 const errorLight = computed(
   () => lightAllList.value.filter(arr => arr.status === '故障').length
 )
@@ -264,8 +271,9 @@ const showGroupAllBright = async (group, type) => {
 
 // 进入后台
 // http://172.16.70.149/#/lightControl/dashboard
+// http://47.101.133.246:8095
 const onGoBack = () => {
-  location.assign('http://47.101.133.246:8095/#/lightControl/dashboard')
+  location.assign('http://172.16.70.149/#/lightControl/dashboard')
 }
 
 // 监听区域点击
@@ -449,7 +457,7 @@ watch(lightPoints, newValue => {
 ::v-deep(.fm-control-groups) {
   box-shadow: #1e82fa 0px 0px 5px !important;
 }
-
+/* 地图dom样式 */
 ::v-deep(.warn-dom) {
   position: absolute;
   left: -104px;

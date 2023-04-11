@@ -17,6 +17,10 @@
               <span class="circle">正常运行灯</span>
             </div>
             <div>
+              <span class="electricity up-down">{{ normalLight }}个</span>
+              <span class="circle">离线灯</span>
+            </div>
+            <div>
               <span class="electricity up-down">{{ errorLight }}个</span>
               <span class="circle">故障灯</span>
             </div>
@@ -60,6 +64,10 @@ defineProps({
   terminalInfo: {
     type: Object,
     default: () => ({})
+  },
+  normalLight: {
+    type: Number,
+    default: 0
   }
 })
 

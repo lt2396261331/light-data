@@ -58,7 +58,7 @@
         <el-table-column
           property="nodeIEEEAddress"
           label="灯节点id"
-          width="100"
+          width="200"
         />
         <el-table-column property="nodeName" label="灯名称" width="200" />
         <el-table-column property="groupIDNumber" label="分组一" />
