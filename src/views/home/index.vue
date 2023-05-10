@@ -180,14 +180,16 @@ watch(lightPoints, newValue => {
     left: 50%;
     transform: translate(-50%);
 
+    z-index: 999;
+
     display: flex;
     justify-content: space-evenly;
     align-items: center;
   }
 
   .map-container {
-    height: 70%;
-    width: 60%;
+    height: 80%;
+    width: 80%;
   }
 
   .home-light-info {
