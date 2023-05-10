@@ -1,68 +1,9 @@
 <template>
   <div class="home">
-    <div class="title">
-      <img src="@/assets/image/home/home-title.png" alt="" />
-      <div class="text">智慧照明可视化管理</div>
+    <div class="action">
+      <el-button type="primary" @click="refreshBtn">刷新</el-button>
     </div>
     <div class="p-ab-center map-container" ref="mapRef"></div>
-    <div class="left">
-      <save-electricity
-        :emission-info="emissionTotalInfo"
-        :save-electricitys="saveElectricitys"
-      />
-      <month-electricity :electricity-info="yearMeterData" />
-      <light-sum @clickShowArea="showAreaInfo" />
-    </div>
-    <div class="right">
-      <terminal
-        :success-light="onlineLight"
-        :error-light="errorLight"
-        :normal-light="normalLight"
-        :terminal-info="terminalInfo"
-      />
-      <day-eletricity :meter-info="monthMeterData" />
-      <day-save-eletricity :meter-info="monthMeterData" />
-    </div>
-    <div class="action">
-      <el-popconfirm
-        width="420"
-        confirm-button-text="确定"
-        cancel-button-text="取消"
-        :icon="InfoFilled"
-        icon-color="#626AEF"
-        title="该操作需要轮询所有分组信息，分组数量较多可能导致耗时较长（约10分钟）。是否确定继续执行？"
-        @confirm="setAllLightTempTask('light')"
-      >
-        <template #reference>
-          <el-button type="primary" size="small">全局全亮</el-button>
-        </template>
-      </el-popconfirm>
-      <el-popconfirm
-        width="420"
-        confirm-button-text="确定"
-        cancel-button-text="取消"
-        :icon="InfoFilled"
-        icon-color="#626AEF"
-        title="该操作需要轮询所有分组信息，分组数量较多可能导致耗时较长（约10分钟）。是否确定继续执行？"
-        @confirm="setAllLightTempTask"
-      >
-        <template #reference>
-          <el-button type="primary" size="small">全局恢复</el-button>
-        </template>
-      </el-popconfirm>
-    </div>
-    <el-button type="primary" size="small" class="go-btn" @click="onGoBack"
-      >管理后台</el-button
-    >
-    <area-info
-      class="home-area-info"
-      :area-info="areaDetailInfo"
-      :message="showTip"
-      v-if="showAreaInfoStatus"
-      @close="clickCloseAreaInfo"
-      @all-bright="showGroupAllBright"
-      @reset-auto="showGroupAllBright"
-    />
   </div>
 </template>
 
@@ -79,19 +20,7 @@ import useLightStore from '@/stores/lightStore'
 import { getLightUrl } from '@/utils/helper'
 
 import { SetTempTask } from '@/services/module/fl-light'
-
-import SaveElectricity from './cpns/save-electricity.vue'
-import MonthElectricity from './cpns/month-electricity.vue'
-import LightSum from './cpns/light-sum.vue'
-
-import Terminal from './cpns/terminal.vue'
-import DayEletricity from './cpns/day-eletricity.vue'
-import daySaveEletricity from '@/views/home/cpns/day-save-eletricity.vue'
-
-import LightInfo from './cpns/light-info.vue'
-import AreaInfo from './cpns/area-info.vue'
 import { ElMessage } from 'element-plus'
-import { InfoFilled } from '@element-plus/icons-vue'
 
 const mapRef = ref()
 const {
@@ -121,75 +50,30 @@ const { setCoverType } = useMapCover(
 )
 
 const lightStore = useLightStore()
-lightStore.fetchYearMeterData()
-lightStore.fetchMonthMeterData()
-lightStore.fetchTerminalData()
-lightStore.fetchEmissionTotalInfo()
-lightStore.fetchGetElectricitys()
 await lightStore.fetchGroupList()
 await lightStore.fetchGetCountryList()
 
-setInterval(() => {
-  lightStore.fetchYearMeterData()
-  lightStore.fetchMonthMeterData()
-  lightStore.fetchTerminalData()
-  lightStore.fetchEmissionTotalInfo()
-  lightStore.fetchGetElectricitys()
-  lightStore.fetchGroupList()
-  lightStore.fetchGetCountryList()
-}, 1000 * 60 * 60)
 
-const {
-  countryInfo,
-  groupList,
-  lightAllList,
-  yearMeterData,
-  monthMeterData,
-  terminalInfo,
-  emissionTotalInfo,
-  saveElectricitys
-} = storeToRefs(lightStore)
+const { groupList, lightAllList } = storeToRefs(lightStore)
 
 const areaStore = useAreaStore()
-const { allAreaList, areaDetailInfo, showAreaInfoStatus } =
-  storeToRefs(areaStore)
-
-// 终端
-// 正常运行灯
-const onlineLight = computed(
-  () => lightAllList.value.filter(arr => arr.status === '在线').length
-)
-// 离线灯
-const normalLight = computed(
-  () => lightAllList.value.filter(arr => arr.status === '正常' || arr.status === '离线').length
-)
-// 故障灯
-const errorLight = computed(
-  () => lightAllList.value.filter(arr => arr.status === '故障').length
-)
+const { allAreaList } = storeToRefs(areaStore)
 
 onMounted(async () => {
-  loadMap(mapRef.value)
+  loadMap(mapRef.value, false)
 })
 
 // 地图加成完成
 watch(mapStatus, async () => {
   // console.log('地图加成完成', mapState.value)
   if (mapStatus.value) {
-    await areaStore.fetchAllAreaList()
     await lightStore.fetchLightList()
-    nextTick(() => {
-      // 显示智慧照明区域
-      for (const area of allAreaList.value) {
-        const areas = area.areas.split(',')
-        setCoverType(areas, area.areaType, area.floorId, null, 'riskArea', {
-          name: area.areaName
-        })
-      }
-      setCickPolygonStatus(true)
-    })
   }
 })
+
+const refreshBtn = () => {
+  lightStore.fetchLightList()
+}
 
 watch(lightAllList, newValue => {
   if (mapStatus.value) {
@@ -197,7 +81,7 @@ watch(lightAllList, newValue => {
     // 显示灯位置
     for (const light of lightAllList.value) {
       const groupInfo = groupList.value.find(
-        item => item.deviceAreaID == light.groupIDNumber
+        item => item.id == light.groupID
       )
       if (!groupInfo) {
         return
@@ -205,7 +89,7 @@ watch(lightAllList, newValue => {
       const imageMarkerInfo = {
         x: light.x,
         y: light.y,
-        level: groupInfo.floorID,
+        level: Number(groupInfo.floorName),
         type: 'light',
         id: 'aaa-bbb-ccc',
         url: getLightUrl(light.status, light.brightness)
@@ -215,122 +99,19 @@ watch(lightAllList, newValue => {
   }
 })
 
-// 全局全亮/恢复
-const setAllLightTempTask = async type => {
-  // 全亮
-  let res = {}
-  if (type === 'light') {
-    res = await SetTempTask(countryInfo.value.countryID, 10, 10)
-  } else {
-    // 恢复
-    res = await SetTempTask(countryInfo.value.countryID, -2, -2)
-  }
-  ElMessage.success({
-    message: res.message
-  })
-  lightStore.fetchLightList()
-}
-
-const showTip = ref(false)
-// 多组全亮/回复
-const showGroupAllBright = async (group, type) => {
-  const groups = group.split(',')
-  const groupInfo = groups.map(arr => {
-    const info = groupList.value.find(item => item.deviceAreaID == arr)
-    if (info) {
-      if (type === 'light') {
-        // 全亮
-        return SetTempTask(
-          info.countryID,
-          10,
-          10,
-          info.buildingID,
-          info.floorID,
-          info.deviceAreaID
-        )
-      }
-      return SetTempTask(
-        info.countryID,
-        -2,
-        -2,
-        info.buildingID,
-        info.floorID,
-        info.deviceAreaID
-      )
-    }
-  })
-  try {
-    const res = await Promise.all(groupInfo)
-    showTip.value = true
-    setTimeout(() => {
-      showTip.value = false
-    }, 1000)
-    lightStore.fetchLightList()
-  } catch (error) {}
-}
-
-// 进入后台
-// http://172.16.70.149/#/lightControl/dashboard
-// http://47.101.133.246:8095
-const onGoBack = () => {
-  location.assign('http://172.16.70.149/#/lightControl/dashboard')
-}
-
-// 监听区域点击
-watch(polygonPoint.value, () => {
-  const newAreaPonit = polygonPoint.value[polygonPoint.value.length - 1]
-  const clickPoint = { x: newAreaPonit.x, y: newAreaPonit.y }
-  areaDetailInfo.value = allAreaList.value.find(area => {
-    const areas = area.areas.split(',')
-    if (area.floorId == newAreaPonit.level) {
-      if (area.areaType == 2) {
-        const [x, y, r] = areas
-        const circlePoint = circleBuilder(
-          Number(r),
-          { x: Number(x), y: Number(y) },
-          100
-        )
-        return pointInArea(clickPoint, circlePoint)
-      } else {
-        const areaPoint = areas.map(arr => {
-          const [x, y] = arr.split('&')
-          return { x: Number(x), y: Number(y) }
-        })
-        return pointInArea(clickPoint, areaPoint)
-      }
-    }
-  })
-  if (areaDetailInfo.value) showAreaInfoStatus.value = true
-})
-// 左侧区域列表选择
-const showAreaInfo = areaInfo => {
-  if (areaInfo.id === areaDetailInfo.value.id) {
-    areaDetailInfo.value = {}
-    showAreaInfoStatus.value = false
-    return
-  }
-  areaDetailInfo.value = areaInfo
-  showAreaInfoStatus.value = true
-}
-// 关闭
-const clickCloseAreaInfo = () => {
-  areaDetailInfo.value = {}
-  showAreaInfoStatus.value = false
-}
-
 watch(lightPoints, newValue => {
   // removeModalDom()
   const clickLight = newValue.points[newValue.points.length - 1]
   let groupInfo = {}
   const lightInfo = lightAllList.value.find(item => {
     groupInfo = groupList.value.find(
-      iten => iten.deviceAreaID == item.groupIDNumber
+      iten => iten.id == item.groupID
     )
     if (groupInfo) {
       return (
         item.x == clickLight.x &&
         item.y == clickLight.y &&
-        groupInfo.floorID == clickLight.level
+        groupInfo.floorName == clickLight.level
       )
     }
   })
@@ -339,7 +120,7 @@ watch(lightPoints, newValue => {
     addModalDomMarker({
       x: lightInfo.x,
       y: lightInfo.y,
-      level: groupInfo.floorID,
+      level: Number(groupInfo.floorName),
       content
     })
   }
@@ -395,7 +176,7 @@ watch(lightPoints, newValue => {
     width: 20%;
     position: absolute;
     height: 30px;
-    top: 100px;
+    top: 40px;
     left: 50%;
     transform: translate(-50%);
 
@@ -406,7 +187,7 @@ watch(lightPoints, newValue => {
 
   .map-container {
     height: 70%;
-    width: 40%;
+    width: 60%;
   }
 
   .home-light-info {
@@ -464,7 +245,7 @@ watch(lightPoints, newValue => {
   bottom: 40px;
   display: inline-flex;
   width: 240px;
-  height: 180px;
+  height: 200px;
   padding: 12px;
   box-sizing: border-box;
   align-items: center;
