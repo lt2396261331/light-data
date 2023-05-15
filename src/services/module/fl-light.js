@@ -43,7 +43,7 @@ export function getLayers() {
 // 根据院/楼栋/层级/区ID 获取组列表
 export function getGroupsByIDs() {
   return hxRequest.get({
-    url: '/api/HX/getGroupsByIDs?countryID=4&buildingID=-1&floorID=-1&deviceAreaID=-1'
+    url: '/api/HX/getGroupsByIDs?countryID=-1&buildingID=-1&floorID=-1&deviceAreaID=-1'
   })
 }
 
