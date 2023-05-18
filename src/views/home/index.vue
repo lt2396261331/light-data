@@ -197,7 +197,7 @@ watch(lightAllList, newValue => {
     // 显示灯位置
     for (const light of lightAllList.value) {
       const groupInfo = groupList.value.find(
-        item => item.deviceAreaID == light.groupIDNumber
+        item => item.id == light.groupID
       )
       if (!groupInfo) {
         return
@@ -324,7 +324,7 @@ watch(lightPoints, newValue => {
   let groupInfo = {}
   const lightInfo = lightAllList.value.find(item => {
     groupInfo = groupList.value.find(
-      iten => iten.deviceAreaID == item.groupIDNumber
+      iten => iten.id == item.groupID
     )
     if (groupInfo) {
       return (
